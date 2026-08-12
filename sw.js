@@ -1,9 +1,12 @@
-const CACHE="fondsmonitor-v4";
+const CACHE="fondsmonitor-v5";
 const STATIC=[
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./apple-touch-icon.png",
+  "./icon-192.png",
+  "./icon-512.png",
   "./santander-mark.png"
 ];
 const NAV_URL="./data/nav.json";
