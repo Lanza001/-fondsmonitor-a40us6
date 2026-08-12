@@ -41,7 +41,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 .chart-subhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 4px 8px}
 .chart-subtitle{font-size:14px;font-weight:700;color:#dbe6f7;letter-spacing:.01em}
 .chart-subvalue{font-size:12px;color:var(--muted);text-align:right}
-.chart-wrap{height:300px;position:relative;margin:2px 0 0;padding:8px 4px 0}canvas{display:block;width:100%;height:100%}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px;line-height:1.35}.stat-line{display:inline-block;white-space:nowrap}
+.chart-wrap{height:300px;position:relative;margin:2px 0 0;padding:8px 4px 0}canvas{display:block;width:100%;height:100%;cursor:crosshair}.chart-hover-line{display:none;position:absolute;width:1px;background:rgba(255,255,255,.24);pointer-events:none}.chart-hover-dot{display:none;position:absolute;width:9px;height:9px;border-radius:50%;background:#9db9d1;border:2px solid #102037;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(157,185,209,.20)}.chart-tooltip{display:none;position:absolute;z-index:3;top:8px;min-width:112px;padding:7px 9px;border-radius:10px;background:rgba(5,11,20,.94);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 24px rgba(0,0,0,.28);pointer-events:none;white-space:nowrap;font-size:11px;line-height:1.35;color:#dbe6f7}.chart-tooltip b{display:block;color:#fff;font-size:12px;margin-top:2px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px;line-height:1.35}.stat-line{display:inline-block;white-space:nowrap}
 .details{margin-top:14px;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.d span{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.d b{font-size:14px}.note{margin-top:14px;padding:14px 16px;border-radius:18px;background:rgba(119,167,255,.08);border:1px solid rgba(119,167,255,.15);color:#cbd8f4;font-size:12px;line-height:1.45}.footer{text-align:center;color:#778397;font-size:11px;line-height:1.45;margin:18px 12px}
 @media(max-width:430px){.hero{padding:22px 18px 18px}.hero-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric-main{font-size:clamp(27px,7vw,34px)}.change{font-size:11px;padding:7px 7px}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
 </style>
@@ -96,7 +96,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
     <div class="chart-subtitle">Kursentwicklung</div>
     <div class="chart-subvalue" id="courseRangeLabel">NAV je Anteil</div>
   </div>
-  <div class="chart-wrap"><canvas id="chart"></canvas></div>
+  <div class="chart-wrap"><canvas id="chart"></canvas><div class="chart-hover-line" id="chartHoverLine"></div><div class="chart-hover-dot" id="chartHoverDot"></div><div class="chart-tooltip" id="chartTooltip"></div></div>
 
   <div class="stats">
     <div class="stat"><small>Zeitraum</small><strong id="rangeChange">–</strong></div>
@@ -110,7 +110,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
     <div class="chart-subtitle">Bestandsentwicklung</div>
     <div class="chart-subvalue">390,2153 Stück × NAV</div>
   </div>
-  <div class="chart-wrap"><canvas id="nominalChart"></canvas></div>
+  <div class="chart-wrap"><canvas id="nominalChart"></canvas><div class="chart-hover-line" id="nominalHoverLine"></div><div class="chart-hover-dot" id="nominalHoverDot"></div><div class="chart-tooltip" id="nominalTooltip"></div></div>
 
   <div class="stats">
     <div class="stat"><small>Zeitraum</small><strong id="nominalRangeChange">–</strong></div>
@@ -165,25 +165,28 @@ function showMessage(text="",error=false){
  const el=$("#message"); el.textContent=text; el.className="message"+(text?" show":"")+(error?" error":"");
 }
 function render(){
+ if($("#chart")._hideHover)$("#chart")._hideHover();
+ if($("#nominalChart")._hideHover)$("#nominalChart")._hideHover();
  const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
  if(!d.length)return;
- const last=d.at(-1),prev=d.at(-2);
+ const last=d.at(-1);
  $("#price").textContent=fmtNum(last.close);
  $("#priceDate").textContent=fmtDate(last.date);
  $("#nominal").textContent=fmtNum(last.close*UNITS);
- if(prev){
-   const diff=last.close-prev.close,pct=diff/prev.close*100;
+ const s=selected();
+ if(s.length>1){
+   const periodFirst=s[0].close,periodLast=s.at(-1).close;
+   const diff=periodLast-periodFirst,pct=diff/periodFirst*100;
    const e=$("#change"); e.textContent=`${diff>=0?"+":""}${fmtEUR(diff)} · ${fmtPct(pct)}`;
    e.className="change "+(diff>0?"up":diff<0?"down":"");
 
-   const nominalDiff=(last.close-prev.close)*UNITS;
+   const nominalDiff=diff*UNITS;
    const n=$("#nominalChange"); n.textContent=`${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)} · ${fmtPct(pct)}`;
    n.className="change "+(nominalDiff>0?"up":nominalDiff<0?"down":"");
  } else {
    $("#change").textContent="–"; $("#change").className="change";
    $("#nominalChange").textContent="–"; $("#nominalChange").className="change";
  }
- const s=selected();
  const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330};
  let coverageDays=0;
  if(s.length>1){
@@ -217,6 +220,7 @@ function draw(data){
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
 
  if(data.length<2){
+   c._chartMeta=null;
    x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";
    x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return
  }
@@ -229,6 +233,7 @@ function draw(data){
 
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
+ c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close,label:"Kurswert"};
 
  x.strokeStyle="rgba(255,255,255,.10)";
  x.setLineDash([4,4]);
@@ -292,6 +297,7 @@ function drawNominal(data){
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
 
  if(data.length<2){
+   c._chartMeta=null;
    x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";
    x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return
  }
@@ -304,6 +310,7 @@ function drawNominal(data){
 
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
+ c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close*UNITS,label:"Gesamtbestand"};
 
  x.strokeStyle="rgba(255,255,255,.10)";
  x.setLineDash([4,4]);
@@ -363,6 +370,42 @@ function drawNominal(data){
  x.strokeStyle="rgba(255,255,255,.14)";
  x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
+
+function setupChartHover(canvasId,tooltipId,lineId,dotId){
+ const c=$("#"+canvasId),tooltip=$("#"+tooltipId),line=$("#"+lineId),dot=$("#"+dotId);
+ const hide=()=>{tooltip.style.display="none";line.style.display="none";dot.style.display="none"};
+ c._hideHover=hide;
+ const showAt=clientX=>{
+   const m=c._chartMeta;
+   if(!m||m.data.length<2)return hide();
+   const rect=c.getBoundingClientRect();
+   const localX=Math.max(m.pad.l,Math.min(m.w-m.pad.r,clientX-rect.left));
+   const usable=m.w-m.pad.l-m.pad.r;
+   const idx=Math.max(0,Math.min(m.data.length-1,Math.round((localX-m.pad.l)/usable*(m.data.length-1))));
+   const p=m.data[idx],value=m.value(p),gx=m.X(idx),gy=m.Y(value);
+   const wrap=c.parentElement;
+   const px=c.offsetLeft+gx,py=c.offsetTop+gy;
+   line.style.display="block";
+   line.style.left=px+"px";
+   line.style.top=(c.offsetTop+m.pad.t)+"px";
+   line.style.height=(m.h-m.pad.t-m.pad.b)+"px";
+   dot.style.display="block";
+   dot.style.left=px+"px";
+   dot.style.top=py+"px";
+   tooltip.innerHTML=`${fmtDate(p.date)}<b>${m.label}: ${fmtEUR(value)}</b>`;
+   tooltip.style.display="block";
+   const tw=tooltip.offsetWidth;
+   const center=Math.max(tw/2+6,Math.min(wrap.clientWidth-tw/2-6,px));
+   tooltip.style.left=center+"px";
+   tooltip.style.transform="translateX(-50%)";
+ };
+ c.addEventListener("pointermove",e=>{if(e.pointerType==="mouse")showAt(e.clientX)});
+ c.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")hide()});
+ c.addEventListener("pointerdown",e=>{showAt(e.clientX)});
+}
+
+setupChartHover("chart","chartTooltip","chartHoverLine","chartHoverDot");
+setupChartHover("nominalChart","nominalTooltip","nominalHoverLine","nominalHoverDot");
 
 async function load(){
  $("#status").textContent="Lade Daten …";$("#dot").className="dot";
