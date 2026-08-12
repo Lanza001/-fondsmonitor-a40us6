@@ -64,6 +64,33 @@
     .change.up { color:var(--positive); background:rgba(101,212,154,.11); }
     .change.down { color:var(--negative); background:rgba(255,125,136,.11); }
     .meta-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; color:var(--muted); font-size:13px; }
+    .position-value {
+      margin-top:18px;
+      padding:16px 17px;
+      border-radius:18px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .position-value span {
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:4px;
+    }
+    .position-value strong {
+      font-size:24px;
+      letter-spacing:-.025em;
+    }
+    .position-value small {
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      padding-bottom:3px;
+    }
     .status { display:flex; align-items:center; gap:7px; }
     .dot { width:7px;height:7px;border-radius:99px;background:#8b96a6; box-shadow:0 0 0 5px rgba(139,150,166,.08); }
     .dot.live { background:var(--positive); box-shadow:0 0 0 5px rgba(101,212,154,.08); }
@@ -140,6 +167,14 @@
       <span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Startwert</span></span>
     </div>
 
+    <div class="position-value">
+      <div>
+        <span>Nennwert</span>
+        <strong id="nominalValue">39.583,44 €</strong>
+      </div>
+      <small>390,2153 Stück</small>
+    </div>
+
     <div class="periods" role="tablist" aria-label="Zeitraum">
       <button class="period active" data-days="2">1 Tag</button>
       <button class="period" data-days="8">1 Woche</button>
@@ -160,6 +195,7 @@
     <div class="details-grid">
       <div class="ditem"><span>Fondstyp</span><b>Renten-/Laufzeitfonds</b></div>
       <div class="ditem"><span>Fondswährung</span><b>EUR</b></div>
+      <div class="ditem"><span>Stückzahl</span><b>390,2153</b></div>
       <div class="ditem"><span>Aufgelegt</span><b>27.01.2025</b></div>
       <div class="ditem"><span>NAV-Berechnung</span><b>Täglich*</b></div>
     </div>
@@ -203,6 +239,8 @@ const START_DATA = [
   { date: "2026-08-10", close: 101.44 }
 ];
 
+const UNITS = 390.2153;
+
 let allData = [...START_DATA];
 let days = 2;
 
@@ -228,6 +266,7 @@ function render() {
   const prev = sorted.at(-2);
   $("#price").textContent = fmtNum(latest.close);
   $("#priceDate").textContent = fmtDate(latest.date);
+  $("#nominalValue").textContent = fmtEUR(latest.close * UNITS);
 
   if (prev) {
     const diff = latest.close-prev.close;
