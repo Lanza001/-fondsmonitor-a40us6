@@ -115,7 +115,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 <div class="d"><span>NAV-Berechnung</span><b>Täglich*</b></div>
 <div class="d"><span>Datenquelle</span><b id="source">–</b></div>
 </div>
-<div class="note">*NAV-Berechnung an Luxemburger Geschäftstagen. „1 Tag“ vergleicht deshalb die letzten zwei verfügbaren NAV-Werte. Die statische Datendatei wird automatisch über GitHub Actions aktualisiert.</div>
+<div class="note">*NAV-Berechnung an Luxemburger Geschäftstagen. „1 Tag“ vergleicht deshalb die letzten zwei verfügbaren NAV-Werte. Die statische Datendatei wird automatisch über GitHub Actions aktualisiert. Für längere Zeiträume werden veröffentlichte Monats-Stützpunkte verwendet.</div>
 </section>
 <div class="footer">Persönliches Anzeige-Tool, keine Anlageberatung. Öffentliche Kursdaten können verzögert sein.</div>
 </div>
@@ -133,11 +133,21 @@ const fmtPct=v=>(v>0?"+":"")+v.toLocaleString("de-DE",{minimumFractionDigits:2,m
 function selected(){
  const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
  if(period==="day") return d.slice(-2);
+
  const end=new Date(d.at(-1).date+"T12:00:00");
  const start=new Date(end);
  const daysMap={week:7,month:31,"3months":93,"6months":186,"1year":366};
  start.setDate(start.getDate()-(daysMap[period]||31));
- return d.filter(x=>new Date(x.date+"T12:00:00")>=start);
+
+ const result=d.filter(x=>new Date(x.date+"T12:00:00")>=start);
+
+ // Für längere Zeiträume zusätzlich den letzten Wert unmittelbar vor
+ // dem Zeitraumstart aufnehmen. Dadurch beginnt die Linie sauber am Rand.
+ if(["month","3months","6months","1year"].includes(period)){
+   const prior=d.filter(x=>new Date(x.date+"T12:00:00")<start).at(-1);
+   if(prior && !result.some(x=>x.date===prior.date)) result.unshift(prior);
+ }
+ return result;
 }
 function showMessage(text="",error=false){
  const el=$("#message"); el.textContent=text; el.className="message"+(text?" show":"")+(error?" error":"");
@@ -155,9 +165,13 @@ function render(){
    e.className="change "+(diff>0?"up":diff<0?"down":"");
  }
  const s=selected();
- const minPoints={day:2,week:4,month:8,"3months":20,"6months":40,"1year":80};
- if(s.length < (minPoints[period]||8)){
-   showMessage("Für diesen Zeitraum sind noch nicht genügend historische NAV-Werte gespeichert. Die neuen Buttons 3M, 6M und 1J sind bereits vorhanden, benötigen aber entsprechend mehr Historie.",false);
+ const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330};
+ let coverageDays=0;
+ if(s.length>1){
+   coverageDays=(new Date(s.at(-1).date+"T12:00:00")-new Date(s[0].date+"T12:00:00"))/86400000;
+ }
+ if(s.length<2 || coverageDays < (minCoverageDays[period]||25)){
+   showMessage("Für diesen Zeitraum ist die historische Abdeckung noch nicht ausreichend.",false);
  } else showMessage();
  const vals=s.map(x=>x.close),first=s[0]?.close,end=s.at(-1)?.close;
  $("#rangeChange").textContent=s.length>1?fmtPct((end-first)/first*100):"–";
