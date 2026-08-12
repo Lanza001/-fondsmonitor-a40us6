@@ -1,0 +1,17 @@
+{
+  "name": "Fondsmonitor A40US6",
+  "short_name": "Fondsmonitor",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07101d",
+  "theme_color": "#0b1220",
+  "description": "NAV und Kursverlauf für WKN A40US6 / ISIN LU2936783674",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
