@@ -1,433 +1,154 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1220" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Fondsmonitor" />
-  <title>Fondsmonitor · A40US6</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icon.svg" />
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #07101d;
-      --panel: rgba(18, 30, 49, .82);
-      --panel2: rgba(26, 40, 63, .72);
-      --text: #f5f7fb;
-      --muted: #9da9ba;
-      --line: rgba(255,255,255,.10);
-      --accent: #77a7ff;
-      --positive: #65d49a;
-      --negative: #ff7d88;
-      --shadow: 0 24px 70px rgba(0,0,0,.28);
-      --radius: 26px;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin:0; min-height:100%; background:
-      radial-gradient(circle at 70% -10%, rgba(77,124,255,.22), transparent 40%),
-      linear-gradient(180deg, #091426 0%, var(--bg) 55%, #050b14 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, system-ui, sans-serif;
-      color: var(--text);
-    }
-    body { padding: max(18px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom)); }
-    .app { max-width: 720px; margin: 0 auto; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 6px 2px 20px; }
-    .eyebrow { color: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .02em; }
-    h1 { font-size: clamp(20px, 5vw, 28px); line-height:1.08; margin: 5px 0 0; letter-spacing:-.025em; }
-    button { font: inherit; color: inherit; }
-    .icon-btn {
-      width:44px;height:44px;border-radius:15px;border:1px solid var(--line);
-      background:rgba(255,255,255,.055);display:grid;place-items:center;cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .card {
-      background: linear-gradient(145deg, rgba(25,42,68,.88), rgba(11,20,34,.86));
-      border: 1px solid rgba(255,255,255,.105);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      overflow:hidden;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-    .hero { padding: 24px 22px 20px; }
-    .label { color:var(--muted); font-size:14px; font-weight:600; }
-    .price-row { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-top:7px; }
-    .price { font-size: clamp(46px, 13vw, 72px); letter-spacing:-.055em; font-weight:700; line-height:.96; }
-    .currency { font-size:.43em; letter-spacing:-.02em; font-weight:600; color:#cfd6e2; margin-left:4px; }
-    .change {
-      flex:0 0 auto; padding:8px 10px; border-radius:12px; font-size:14px; font-weight:700; margin-bottom:5px;
-      background:rgba(255,255,255,.06);
-    }
-    .change.up { color:var(--positive); background:rgba(101,212,154,.11); }
-    .change.down { color:var(--negative); background:rgba(255,125,136,.11); }
-    .meta-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; color:var(--muted); font-size:13px; }
-    .position-value {
-      margin-top:18px;
-      padding:16px 17px;
-      border-radius:18px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:14px;
-    }
-    .position-value span {
-      display:block;
-      color:var(--muted);
-      font-size:12px;
-      margin-bottom:4px;
-    }
-    .position-value strong {
-      font-size:24px;
-      letter-spacing:-.025em;
-    }
-    .position-value small {
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-      padding-bottom:3px;
-    }
-    .status { display:flex; align-items:center; gap:7px; }
-    .dot { width:7px;height:7px;border-radius:99px;background:#8b96a6; box-shadow:0 0 0 5px rgba(139,150,166,.08); }
-    .dot.live { background:var(--positive); box-shadow:0 0 0 5px rgba(101,212,154,.08); }
-    .periods { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:18px 0 12px; padding:5px; background:rgba(255,255,255,.045); border:1px solid var(--line); border-radius:16px; }
-    .period {
-      border:0;background:transparent;padding:10px 8px;border-radius:12px;color:var(--muted);font-weight:700;cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .period.active { background:rgba(255,255,255,.11); color:var(--text); box-shadow:0 2px 10px rgba(0,0,0,.12); }
-    .chart-wrap { position:relative; height:260px; margin: 0 -4px; }
-    canvas { width:100%; height:100%; display:block; }
-    .range-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
-    .stat { padding:12px 13px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); }
-    .stat small { display:block; color:var(--muted); font-size:11px; margin-bottom:5px; }
-    .stat strong { font-size:14px; letter-spacing:-.01em; }
-    .details { margin-top:14px; padding:18px; }
-    .details-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; }
-    .ditem span { display:block; color:var(--muted); font-size:12px; margin-bottom:3px; }
-    .ditem b { font-size:14px; font-weight:650; }
-    .note {
-      margin-top:14px; padding:14px 16px; border-radius:18px; background:rgba(119,167,255,.08);
-      border:1px solid rgba(119,167,255,.15); color:#cbd8f4; font-size:12px; line-height:1.45;
-    }
-    .footer { text-align:center; color:#778397; font-size:11px; line-height:1.45; margin:18px 12px 0; }
-    dialog {
-      width:min(92vw, 520px); border:1px solid rgba(255,255,255,.12); border-radius:24px; padding:0;
-      color:var(--text); background:#111d2e; box-shadow:0 30px 90px rgba(0,0,0,.55);
-    }
-    dialog::backdrop { background:rgba(0,0,0,.55); backdrop-filter:blur(4px); }
-    .modal { padding:22px; }
-    .modal h2 { margin:0 0 8px; font-size:22px; letter-spacing:-.02em; }
-    .modal p { margin:0 0 18px; color:var(--muted); font-size:13px; line-height:1.45; }
-    .field { margin:14px 0; }
-    .field label { display:block; font-size:12px; color:var(--muted); margin-bottom:7px; }
-    .field input {
-      width:100%; padding:13px 14px; border-radius:13px; border:1px solid rgba(255,255,255,.12);
-      color:var(--text); background:rgba(255,255,255,.055); outline:none; font:inherit;
-    }
-    .field input:focus { border-color:rgba(119,167,255,.75); }
-    .modal-actions { display:flex; gap:9px; justify-content:flex-end; margin-top:18px; }
-    .btn { border:0; border-radius:13px; padding:11px 15px; font-weight:700; cursor:pointer; }
-    .btn.secondary { background:rgba(255,255,255,.08); }
-    .btn.primary { background:#e7edf8; color:#101827; }
-    .error {
-      display:none; margin: 0 0 14px; padding:12px 14px; border-radius:14px; background:rgba(255,125,136,.10);
-      color:#ffc4ca; border:1px solid rgba(255,125,136,.18); font-size:12px; line-height:1.4;
-    }
-    .error.show { display:block; }
-    @media (max-width:430px) {
-      .hero { padding:22px 18px 18px; }
-      .chart-wrap { height:230px; }
-      .details-grid { grid-template-columns:1fr; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fondsmonitor">
+<title>Fondsmonitor · A40US6</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{color-scheme:dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--accent:#77a7ff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 70% -10%,rgba(77,124,255,.22),transparent 40%),linear-gradient(180deg,#091426 0%,#07101d 55%,#050b14 100%);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;color:var(--text)}
+body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
+.app{max-width:720px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 2px 18px}
+.eyebrow{font-size:12px;color:#9fc4ff;font-weight:700;letter-spacing:.02em}h1{font-size:clamp(21px,5vw,29px);margin:5px 0 0;line-height:1.05;letter-spacing:-.03em}
+.icon-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055);color:white;font-size:21px;cursor:pointer}
+.card{border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(25,42,68,.90),rgba(11,20,34,.89));box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden}
+.hero{padding:24px 22px 20px}.label{color:var(--muted);font-size:14px;font-weight:600}.price-row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:8px}
+.price{font-size:clamp(48px,13vw,72px);line-height:.95;font-weight:750;letter-spacing:-.055em}.currency{font-size:.42em;color:#d7dce5;margin-left:4px;letter-spacing:-.02em}
+.change{padding:8px 10px;border-radius:12px;font-size:14px;font-weight:750;background:rgba(255,255,255,.06);margin-bottom:5px}.change.up{color:var(--up);background:rgba(101,212,154,.11)}.change.down{color:var(--down);background:rgba(255,125,136,.11)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#8b96a6;box-shadow:0 0 0 5px rgba(139,150,166,.08)}.dot.ok{background:var(--up);box-shadow:0 0 0 5px rgba(101,212,154,.08)}
+.position{margin-top:18px;padding:16px 17px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.045);display:flex;justify-content:space-between;align-items:flex-end;gap:14px}.position span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}.position strong{font-size:24px;letter-spacing:-.025em}.position small{color:var(--muted);font-size:12px;padding-bottom:3px}
+.periods{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:18px 0 12px;padding:5px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.045)}.period{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:750;padding:10px 8px;border-radius:12px;cursor:pointer}.period.active{background:rgba(255,255,255,.12);color:white}
+.message{display:none;margin:12px 0;padding:12px 14px;border:1px solid rgba(119,167,255,.18);border-radius:14px;background:rgba(119,167,255,.08);font-size:12px;line-height:1.45;color:#cbd8f4}.message.show{display:block}.message.error{border-color:rgba(255,125,136,.18);background:rgba(255,125,136,.10);color:#ffc4ca}
+.chart-wrap{height:270px;position:relative;margin:2px -4px 0}canvas{display:block;width:100%;height:100%}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px}
+.details{margin-top:14px;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.d span{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.d b{font-size:14px}.note{margin-top:14px;padding:14px 16px;border-radius:18px;background:rgba(119,167,255,.08);border:1px solid rgba(119,167,255,.15);color:#cbd8f4;font-size:12px;line-height:1.45}.footer{text-align:center;color:#778397;font-size:11px;line-height:1.45;margin:18px 12px}
+@media(max-width:430px){.hero{padding:22px 18px 18px}.chart-wrap{height:235px}.grid{grid-template-columns:1fr 1fr}.position strong{font-size:22px}}
+</style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div>
-      <div class="eyebrow">WKN A40US6 · ISIN LU2936783674</div>
-      <h1>Santander Target Maturity Euro IV AD</h1>
-    </div>
-    <button class="icon-btn" id="settingsBtn" aria-label="Einstellungen">⚙︎</button>
-  </header>
+<header>
+<div><div class="eyebrow">WKN A40US6 · ISIN LU2936783674</div><h1>Santander Target Maturity Euro IV AD</h1></div>
+<button class="icon-btn" id="refreshBtn" aria-label="Daten aktualisieren" title="Daten aktualisieren">↻</button>
+</header>
 
-  <section class="card hero">
-    <div class="label">Letzter Nettoinventarwert (NAV)</div>
-    <div class="price-row">
-      <div class="price"><span id="price">101,44</span><span class="currency">€</span></div>
-      <div class="change" id="change">–</div>
-    </div>
-    <div class="meta-row">
-      <span id="priceDate">10.08.2026</span>
-      <span class="status"><i class="dot" id="statusDot"></i><span id="statusText">Startwert</span></span>
-    </div>
+<section class="card hero">
+<div class="label">Letzter Nettoinventarwert (NAV)</div>
+<div class="price-row"><div class="price"><span id="price">–</span><span class="currency">€</span></div><div class="change" id="change">–</div></div>
+<div class="meta"><span id="priceDate">–</span><span class="status"><i class="dot" id="dot"></i><span id="status">Lade Daten …</span></span></div>
 
-    <div class="position-value">
-      <div>
-        <span>Nennwert</span>
-        <strong id="nominalValue">39.583,44 €</strong>
-      </div>
-      <small>390,2153 Stück</small>
-    </div>
+<div class="position"><div><span>Nennwert</span><strong id="nominal">–</strong></div><small>390,2153 Stück</small></div>
 
-    <div class="periods" role="tablist" aria-label="Zeitraum">
-      <button class="period active" data-days="2">1 Tag</button>
-      <button class="period" data-days="8">1 Woche</button>
-      <button class="period" data-days="32">1 Monat</button>
-    </div>
-
-    <div id="error" class="error"></div>
-    <div class="chart-wrap"><canvas id="chart"></canvas></div>
-
-    <div class="range-stats">
-      <div class="stat"><small>Zeitraum</small><strong id="rangeChange">–</strong></div>
-      <div class="stat"><small>Tief</small><strong id="rangeLow">–</strong></div>
-      <div class="stat"><small>Hoch</small><strong id="rangeHigh">–</strong></div>
-    </div>
-  </section>
-
-  <section class="card details">
-    <div class="details-grid">
-      <div class="ditem"><span>Fondstyp</span><b>Renten-/Laufzeitfonds</b></div>
-      <div class="ditem"><span>Fondswährung</span><b>EUR</b></div>
-      <div class="ditem"><span>Stückzahl</span><b>390,2153</b></div>
-      <div class="ditem"><span>Aufgelegt</span><b>27.01.2025</b></div>
-      <div class="ditem"><span>NAV-Berechnung</span><b>Täglich*</b></div>
-    </div>
-    <div class="note">
-      *Der Fonds berechnet den NAV an Luxemburger Geschäftstagen. Daher ist „1 Tag“ hier der Vergleich
-      zwischen den letzten zwei verfügbaren NAV-Werten – kein Intraday-Börsenchart.
-    </div>
-  </section>
-
-  <div class="footer">
-    Persönliches Anzeige-Tool, keine Anlageberatung. Kursdaten können verzögert sein.
-  </div>
+<div class="periods">
+<button class="period active" data-period="day">1 Tag</button>
+<button class="period" data-period="week">1 Woche</button>
+<button class="period" data-period="month">1 Monat</button>
 </div>
 
-<dialog id="settingsDialog">
-  <form method="dialog" class="modal" id="settingsForm">
-    <h2>Kursdaten einrichten</h2>
-    <p>
-      Für automatische Kursupdates verwendet diese Version Twelve Data. Trage deinen API-Key einmal ein;
-      er wird nur lokal auf diesem Gerät gespeichert.
-    </p>
-    <div class="field">
-      <label for="apiKey">Twelve Data API-Key</label>
-      <input id="apiKey" autocomplete="off" placeholder="API-Key" />
-    </div>
-    <div class="field">
-      <label for="symbol">Symbol / ISIN</label>
-      <input id="symbol" value="LU2936783674" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn secondary" value="cancel">Abbrechen</button>
-      <button class="btn primary" id="saveSettings" value="default">Speichern & laden</button>
-    </div>
-  </form>
-</dialog>
+<div class="message" id="message"></div>
+<div class="chart-wrap"><canvas id="chart"></canvas></div>
+
+<div class="stats">
+<div class="stat"><small>Zeitraum</small><strong id="rangeChange">–</strong></div>
+<div class="stat"><small>Tief</small><strong id="rangeLow">–</strong></div>
+<div class="stat"><small>Hoch</small><strong id="rangeHigh">–</strong></div>
+</div>
+</section>
+
+<section class="card details">
+<div class="grid">
+<div class="d"><span>Fondstyp</span><b>Renten-/Laufzeitfonds</b></div>
+<div class="d"><span>Fondswährung</span><b>EUR</b></div>
+<div class="d"><span>Stückzahl</span><b>390,2153</b></div>
+<div class="d"><span>Aufgelegt</span><b>27.01.2025</b></div>
+<div class="d"><span>NAV-Berechnung</span><b>Täglich*</b></div>
+<div class="d"><span>Datenquelle</span><b id="source">–</b></div>
+</div>
+<div class="note">*NAV-Berechnung an Luxemburger Geschäftstagen. „1 Tag“ vergleicht deshalb die letzten zwei verfügbaren NAV-Werte. Die statische Datendatei wird automatisch über GitHub Actions aktualisiert.</div>
+</section>
+<div class="footer">Persönliches Anzeige-Tool, keine Anlageberatung. Öffentliche Kursdaten können verzögert sein.</div>
+</div>
 
 <script>
-const START_DATA = [
-  { date: "2026-08-06", close: 101.45 },
-  { date: "2026-08-07", close: 101.48 },
-  { date: "2026-08-10", close: 101.44 }
-];
+const UNITS=390.2153;
+let allData=[];
+let period="day";
+const $=s=>document.querySelector(s);
+const fmtNum=v=>new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+const fmtEUR=v=>fmtNum(v)+" €";
+const fmtDate=iso=>new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(iso+"T12:00:00"));
+const fmtPct=v=>(v>0?"+":"")+v.toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})+"%";
 
-const UNITS = 390.2153;
-
-let allData = [...START_DATA];
-let days = 2;
-
-const $ = s => document.querySelector(s);
-const fmtEUR = v => new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2}).format(v) + " €";
-const fmtNum = v => new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
-const fmtDate = iso => new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(iso+"T12:00:00"));
-const fmtPct = v => (v>0?"+":"") + v.toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2}) + "%";
-
-function selectedData() {
-  const sorted = [...allData].sort((a,b)=>a.date.localeCompare(b.date));
-  if (days === 2) return sorted.slice(-2);
-  const end = new Date(sorted.at(-1).date+"T12:00:00");
-  const start = new Date(end);
-  start.setDate(start.getDate()-(days-1));
-  return sorted.filter(x => new Date(x.date+"T12:00:00") >= start);
+function selected(){
+ const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
+ if(period==="day") return d.slice(-2);
+ const end=new Date(d.at(-1).date+"T12:00:00");
+ const start=new Date(end);
+ start.setDate(start.getDate()-(period==="week"?7:31));
+ return d.filter(x=>new Date(x.date+"T12:00:00")>=start);
 }
-
-function render() {
-  const sorted = [...allData].sort((a,b)=>a.date.localeCompare(b.date));
-  if (!sorted.length) return;
-  const latest = sorted.at(-1);
-  const prev = sorted.at(-2);
-  $("#price").textContent = fmtNum(latest.close);
-  $("#priceDate").textContent = fmtDate(latest.date);
-  $("#nominalValue").textContent = fmtEUR(latest.close * UNITS);
-
-  if (prev) {
-    const diff = latest.close-prev.close;
-    const pct = diff/prev.close*100;
-    const el = $("#change");
-    el.textContent = `${diff>=0?"+":""}${fmtNum(diff)} € · ${fmtPct(pct)}`;
-    el.className = "change " + (diff>0?"up":diff<0?"down":"");
-  }
-
-  const ds = selectedData();
-  const lows = ds.map(x=>x.close);
-  const start = ds[0]?.close;
-  const end = ds.at(-1)?.close;
-  const pct = start ? (end-start)/start*100 : 0;
-  $("#rangeChange").textContent = ds.length > 1 ? fmtPct(pct) : "–";
-  $("#rangeLow").textContent = lows.length ? fmtEUR(Math.min(...lows)) : "–";
-  $("#rangeHigh").textContent = lows.length ? fmtEUR(Math.max(...lows)) : "–";
-  drawChart(ds);
+function showMessage(text="",error=false){
+ const el=$("#message"); el.textContent=text; el.className="message"+(text?" show":"")+(error?" error":"");
 }
-
-function drawChart(data) {
-  const canvas = $("#chart");
-  const rect = canvas.getBoundingClientRect();
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  canvas.width = Math.floor(rect.width*dpr);
-  canvas.height = Math.floor(rect.height*dpr);
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr,dpr);
-  const w=rect.width,h=rect.height;
-  ctx.clearRect(0,0,w,h);
-
-  if (data.length < 2) {
-    ctx.fillStyle="#8794a7";
-    ctx.font="13px -apple-system, system-ui";
-    ctx.textAlign="center";
-    ctx.fillText("Für diesen Zeitraum sind noch nicht genügend Daten vorhanden.",w/2,h/2);
-    return;
-  }
-
-  const pad={l:8,r:8,t:18,b:30};
-  const vals=data.map(x=>x.close);
-  let min=Math.min(...vals), max=Math.max(...vals);
-  if (max-min < .03) { min-=.02; max+=.02; }
-  const extra=(max-min)*.20;
-  min-=extra; max+=extra;
-
-  const x=i => pad.l + i*(w-pad.l-pad.r)/(data.length-1);
-  const y=v => pad.t + (max-v)*(h-pad.t-pad.b)/(max-min);
-
-  ctx.strokeStyle="rgba(255,255,255,.07)";
-  ctx.lineWidth=1;
-  for(let i=0;i<4;i++){
-    const gy=pad.t+i*(h-pad.t-pad.b)/3;
-    ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();
-  }
-
-  const up=vals.at(-1)>=vals[0];
-  const lineColor=up?"#65d49a":"#ff7d88";
-  const grad=ctx.createLinearGradient(0,pad.t,0,h-pad.b);
-  grad.addColorStop(0, up?"rgba(101,212,154,.22)":"rgba(255,125,136,.22)");
-  grad.addColorStop(1, up?"rgba(101,212,154,0)":"rgba(255,125,136,0)");
-
-  ctx.beginPath();
-  data.forEach((p,i)=>{ const xx=x(i), yy=y(p.close); i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); });
-  ctx.lineTo(x(data.length-1),h-pad.b);
-  ctx.lineTo(x(0),h-pad.b);
-  ctx.closePath();
-  ctx.fillStyle=grad; ctx.fill();
-
-  ctx.beginPath();
-  data.forEach((p,i)=>{ const xx=x(i), yy=y(p.close); i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); });
-  ctx.strokeStyle=lineColor; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.lineCap="round"; ctx.stroke();
-
-  const last=data.at(-1);
-  ctx.beginPath();ctx.arc(x(data.length-1),y(last.close),4.2,0,Math.PI*2);
-  ctx.fillStyle=lineColor;ctx.fill();
-  ctx.strokeStyle="#07101d";ctx.lineWidth=2;ctx.stroke();
-
-  ctx.fillStyle="#8794a7";
-  ctx.font="11px -apple-system, system-ui";
-  ctx.textAlign="left";
-  ctx.fillText(fmtDate(data[0].date).slice(0,5),pad.l,h-7);
-  ctx.textAlign="right";
-  ctx.fillText(fmtDate(last.date).slice(0,5),w-pad.r,h-7);
+function render(){
+ const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
+ if(!d.length)return;
+ const last=d.at(-1),prev=d.at(-2);
+ $("#price").textContent=fmtNum(last.close);
+ $("#priceDate").textContent=fmtDate(last.date);
+ $("#nominal").textContent=fmtEUR(last.close*UNITS);
+ if(prev){
+   const diff=last.close-prev.close,pct=diff/prev.close*100;
+   const e=$("#change"); e.textContent=`${diff>=0?"+":""}${fmtNum(diff)} € · ${fmtPct(pct)}`;
+   e.className="change "+(diff>0?"up":diff<0?"down":"");
+ }
+ const s=selected();
+ if((period==="week" && s.length<3)||(period==="month" && s.length<8)){
+   showMessage("Für diesen Zeitraum sind noch nicht genügend historische NAV-Werte gespeichert. Starte den GitHub-Workflow „NAV aktualisieren“ einmal manuell; danach wird die Historie nachgeladen.",false);
+ } else showMessage();
+ const vals=s.map(x=>x.close),first=s[0]?.close,end=s.at(-1)?.close;
+ $("#rangeChange").textContent=s.length>1?fmtPct((end-first)/first*100):"–";
+ $("#rangeLow").textContent=vals.length?fmtEUR(Math.min(...vals)):"–";
+ $("#rangeHigh").textContent=vals.length?fmtEUR(Math.max(...vals)):"–";
+ draw(s);
 }
-
-async function loadFromTwelveData() {
-  const key=localStorage.getItem("td_api_key");
-  const symbol=localStorage.getItem("td_symbol") || "LU2936783674";
-  if (!key) {
-    $("#statusText").textContent="Startwert";
-    $("#statusDot").className="dot";
-    return;
-  }
-
-  $("#statusText").textContent="Aktualisiere …";
-  $("#error").classList.remove("show");
-
-  const url = new URL("https://api.twelvedata.com/time_series");
-  url.searchParams.set("symbol",symbol);
-  url.searchParams.set("interval","1day");
-  url.searchParams.set("outputsize","45");
-  url.searchParams.set("order","ASC");
-  url.searchParams.set("apikey",key);
-
-  try {
-    const r=await fetch(url);
-    const j=await r.json();
-    if (!r.ok || j.status==="error" || !Array.isArray(j.values)) {
-      throw new Error(j.message || "Keine Kursreihe für dieses Symbol erhalten.");
-    }
-    const parsed=j.values.map(v=>({
-      date:(v.datetime||"").slice(0,10),
-      close:Number(v.close)
-    })).filter(v=>v.date && Number.isFinite(v.close));
-
-    if (parsed.length < 2) throw new Error("Zu wenige Kursdaten zurückgegeben.");
-    allData=parsed;
-    $("#statusText").textContent="API-Daten";
-    $("#statusDot").className="dot live";
-    render();
-  } catch(e) {
-    $("#statusText").textContent="Startwert";
-    $("#statusDot").className="dot";
-    const box=$("#error");
-    box.textContent="Automatisches Update nicht möglich: "+e.message+" Prüfe API-Key bzw. Symbol in den Einstellungen.";
-    box.classList.add("show");
-  }
+function draw(data){
+ const c=$("#chart"),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);
+ c.width=Math.floor(r.width*dpr);c.height=Math.floor(r.height*dpr);
+ const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
+ if(data.length<2){x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
+ const pad={l:8,r:8,t:18,b:30},v=data.map(a=>a.close);let lo=Math.min(...v),hi=Math.max(...v);if(hi-lo<.03){lo-=.02;hi+=.02}const ex=(hi-lo)*.18;lo-=ex;hi+=ex;
+ const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1),Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
+ x.strokeStyle="rgba(255,255,255,.07)";x.lineWidth=1;for(let i=0;i<4;i++){const gy=pad.t+i*(h-pad.t-pad.b)/3;x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke()}
+ const up=v.at(-1)>=v[0],lc=up?"#65d49a":"#ff7d88",g=x.createLinearGradient(0,pad.t,0,h-pad.b);g.addColorStop(0,up?"rgba(101,212,154,.22)":"rgba(255,125,136,.22)");g.addColorStop(1,up?"rgba(101,212,154,0)":"rgba(255,125,136,0)");
+ x.beginPath();data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));x.lineTo(X(data.length-1),h-pad.b);x.lineTo(X(0),h-pad.b);x.closePath();x.fillStyle=g;x.fill();
+ x.beginPath();data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));x.strokeStyle=lc;x.lineWidth=2.5;x.lineJoin="round";x.lineCap="round";x.stroke();
+ x.beginPath();x.arc(X(data.length-1),Y(v.at(-1)),4.2,0,Math.PI*2);x.fillStyle=lc;x.fill();x.strokeStyle="#07101d";x.lineWidth=2;x.stroke();
+ x.fillStyle="#8794a7";x.font="11px -apple-system,system-ui";x.textAlign="left";x.fillText(fmtDate(data[0].date).slice(0,5),pad.l,h-7);x.textAlign="right";x.fillText(fmtDate(data.at(-1).date).slice(0,5),w-pad.r,h-7);
 }
-
-document.querySelectorAll(".period").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".period").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    days=Number(btn.dataset.days);
-    render();
-  });
-});
-
-$("#settingsBtn").addEventListener("click",()=>{
-  $("#apiKey").value=localStorage.getItem("td_api_key")||"";
-  $("#symbol").value=localStorage.getItem("td_symbol")||"LU2936783674";
-  $("#settingsDialog").showModal();
-});
-
-$("#settingsForm").addEventListener("submit",(e)=>{
-  if (e.submitter?.value==="cancel") return;
-  e.preventDefault();
-  localStorage.setItem("td_api_key",$("#apiKey").value.trim());
-  localStorage.setItem("td_symbol",$("#symbol").value.trim()||"LU2936783674");
-  $("#settingsDialog").close();
-  loadFromTwelveData();
-});
-
-window.addEventListener("resize",render);
-render();
-loadFromTwelveData();
-
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./sw.js").catch(()=>{});
+async function load(){
+ $("#status").textContent="Lade Daten …";$("#dot").className="dot";
+ try{
+   const r=await fetch("./data/nav.json?t="+Date.now(),{cache:"no-store"});
+   if(!r.ok)throw new Error("nav.json konnte nicht geladen werden");
+   const j=await r.json();
+   allData=(j.values||[]).filter(v=>v.date&&Number.isFinite(Number(v.close))).map(v=>({date:v.date,close:Number(v.close)}));
+   if(!allData.length)throw new Error("Keine NAV-Werte vorhanden");
+   $("#status").textContent="Aktualisiert "+(j.updated_at?new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(j.updated_at)):"");
+   $("#dot").className="dot ok";$("#source").textContent=j.source||"öffentliche NAV-Daten";render();
+ }catch(e){
+   $("#status").textContent="Datenfehler";showMessage("Daten konnten nicht geladen werden: "+e.message,true);
+ }
 }
+document.querySelectorAll(".period").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".period").forEach(x=>x.classList.remove("active"));b.classList.add("active");period=b.dataset.period;render()}));
+$("#refreshBtn").addEventListener("click",()=>load());
+window.addEventListener("resize",()=>allData.length&&render());
+load();
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
-</body>
-</html>
+</body></html>

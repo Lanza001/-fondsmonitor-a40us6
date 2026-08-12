@@ -1,52 +1,43 @@
-# Fondsmonitor – WKN A40US6 / ISIN LU2936783674
+# Fondsmonitor A40US6 – V3 ohne API-Key
 
-Eine iPhone-optimierte Progressive Web App (PWA) für den
-**Santander Target Maturity Euro IV AD EUR Income**.
+Diese Version benötigt **keinen Twelve-Data-API-Key**.
 
-## Funktionen
-- letzter NAV in EUR
-- Veränderung zum vorherigen NAV
-- Chart für **1 Tag / 1 Woche / 1 Monat**
-- Tief/Hoch und prozentuale Veränderung des gewählten Zeitraums
-- installierbar auf dem iPhone-Home-Bildschirm
-- API-Key wird nur lokal im Browser (`localStorage`) gespeichert
-- kein Tracking, keine Benutzerkonten
+## Prinzip
+Die Webseite bleibt eine statische GitHub-Pages-PWA. Ein GitHub-Actions-Workflow
+ruft werktags öffentliche NAV-Daten ab und schreibt sie in `data/nav.json`.
+Die App liest nur diese Datei aus demselben Repository.
 
-## Datenquelle
-Die App ist für **Twelve Data** vorbereitet. Das ist sinnvoller als HTML-Scraping,
-weil die Oberfläche einer Finanz-Webseite jederzeit geändert werden kann.
+Damit gibt es:
+- keinen API-Key auf iPhone/iPad
+- keinen dauerhaft laufenden Backend-Server
+- dieselben Daten auf allen Endgeräten
+- NAV, Nennwert für 390,2153 Stück
+- Chart für 1 Tag / 1 Woche / 1 Monat
+- Tief, Hoch und Zeitraum-Performance
 
-1. Bei Twelve Data einen API-Key anlegen.
-2. `index.html` öffnen bzw. die Seite hosten.
-3. Oben rechts auf **⚙︎** tippen.
-4. API-Key eintragen.
-5. Als Symbol zunächst `LU2936783674` verwenden.
-6. Falls der Anbieter die ISIN nicht direkt auflöst, im Twelve-Data-Dashboard nach
-   dem Fonds suchen und das dort angezeigte Symbol einsetzen.
+## Wichtig nach dem Upload
+Alle Dateien und Ordner dieses Pakets müssen im Repository landen, insbesondere:
 
-Die App enthält als klar gekennzeichneten Startwert die zuletzt öffentlich
-verifizierten Daten, damit die Oberfläche auch ohne API-Key sichtbar ist.
+- `.github/workflows/update-nav.yml`
+- `scripts/update_nav.py`
+- `data/nav.json`
+- `index.html`
+- `sw.js`
 
-## Am einfachsten auf dem iPhone installieren
-Die Dateien müssen über HTTPS erreichbar sein, z. B. über GitHub Pages,
-Cloudflare Pages, Netlify oder einen eigenen Webserver.
+Anschließend in GitHub:
+**Actions → NAV aktualisieren → Run workflow**
 
-Danach in Safari:
-**Teilen → Zum Home-Bildschirm → Hinzufügen**
+Beim ersten Lauf versucht der Job, die Historie der letzten ca. 50 Tage
+einzulesen. Danach aktualisiert er automatisch werktags zweimal.
 
-Dann startet die Webseite wie eine normale App im Vollbild.
+## GitHub-Pages
+Die Pages-Einstellung bleibt:
+- Source: Deploy from a branch
+- Branch: main
+- Folder: /(root)
 
-## Lokal testen
-In diesem Ordner:
-```bash
-python3 -m http.server 8080
-```
-Dann `http://localhost:8080` öffnen.
-
-## Dateien
-- `index.html` – komplette Oberfläche und Logik
-- `manifest.webmanifest` – PWA-Metadaten
-- `sw.js` – Offline-Cache
-- `icon.svg` – App-Icon
-
-Hinweis: Dies ist ein persönliches Anzeige-Tool und keine Anlageberatung.
+## Hinweise
+Öffentliche Webseiten können ihre HTML-Struktur ändern. Der Scraper ist deshalb
+mit mehreren Fallbacks gebaut und behält vorhandene historische Werte bei.
+Wenn eine Quelle dauerhaft ihr Layout ändert, kann `scripts/update_nav.py`
+angepasst werden.
