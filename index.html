@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-:root{color-scheme:dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--accent:#77a7ff}
+:root{color-scheme:dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--warn:#f2c66d;--accent:#77a7ff}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 70% -10%,rgba(77,124,255,.22),transparent 40%),linear-gradient(180deg,#091426 0%,#07101d 55%,#050b14 100%);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;color:var(--text)}
 body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
 .app{max-width:720px;margin:auto}header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:4px 2px 18px}
@@ -28,8 +28,8 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 .metric-kicker{font-size:13px;color:var(--muted);font-weight:600}
 .metric-main{font-size:clamp(27px,7vw,52px);line-height:.95;font-weight:750;letter-spacing:-.045em;white-space:nowrap}
 .currency{font-size:.42em;color:#d7dce5;margin-left:4px;letter-spacing:-.02em}
-.change{align-self:flex-start;display:inline-flex;align-items:center;white-space:nowrap;padding:8px 10px;border-radius:12px;font-size:13px;font-weight:750;background:rgba(255,255,255,.06)}.change.up{color:var(--up);background:rgba(101,212,154,.11)}.change.down{color:var(--down);background:rgba(255,125,136,.11)}
-.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#8b96a6;box-shadow:0 0 0 5px rgba(139,150,166,.08)}.dot.ok{background:var(--up);box-shadow:0 0 0 5px rgba(101,212,154,.08)}
+.change{align-self:flex-start;display:inline-flex;align-items:center;white-space:nowrap;padding:8px 10px;border-radius:12px;font-size:13px;font-weight:750;background:rgba(255,255,255,.06)}.change.up{color:var(--up);background:rgba(101,212,154,.11)}.change.down{color:var(--down);background:rgba(255,125,136,.11)}.change-period{font-size:.84em;opacity:.72;font-weight:800;margin-left:1px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#8b96a6;box-shadow:0 0 0 5px rgba(139,150,166,.08)}.dot.ok{background:var(--up);box-shadow:0 0 0 5px rgba(101,212,154,.08)}.dot.warn{background:var(--warn);box-shadow:0 0 0 5px rgba(242,198,109,.09)}
 .chart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 10px}
 .chart-title{font-size:14px;font-weight:700;color:#dbe6f7;letter-spacing:.01em}
 .periods{display:flex;flex-wrap:wrap;gap:8px;margin:0}
@@ -43,7 +43,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 .chart-subvalue{font-size:12px;color:var(--muted);text-align:right}
 .chart-wrap{height:300px;position:relative;margin:2px 0 0;padding:8px 4px 0}canvas{display:block;width:100%;height:100%;cursor:crosshair}.chart-hover-line{display:none;position:absolute;width:1px;background:rgba(255,255,255,.24);pointer-events:none}.chart-hover-dot{display:none;position:absolute;width:9px;height:9px;border-radius:50%;background:#9db9d1;border:2px solid #102037;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(157,185,209,.20)}.chart-tooltip{display:none;position:absolute;z-index:3;top:8px;min-width:112px;padding:7px 9px;border-radius:10px;background:rgba(5,11,20,.94);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 24px rgba(0,0,0,.28);pointer-events:none;white-space:nowrap;font-size:11px;line-height:1.35;color:#dbe6f7}.chart-tooltip b{display:block;color:#fff;font-size:12px;margin-top:2px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px;line-height:1.35}.stat-line{display:inline-block;white-space:nowrap}
 .details{margin-top:14px;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.d span{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.d b{font-size:14px}.note{margin-top:14px;padding:14px 16px;border-radius:18px;background:rgba(119,167,255,.08);border:1px solid rgba(119,167,255,.15);color:#cbd8f4;font-size:12px;line-height:1.45}.footer{text-align:center;color:#778397;font-size:11px;line-height:1.45;margin:18px 12px}
-@media(max-width:430px){.hero{padding:22px 18px 18px}.hero-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric-main{font-size:clamp(27px,7vw,34px)}.change{font-size:11px;padding:7px 7px}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
+@media(max-width:430px){.hero{padding:22px 18px 18px}.hero-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric-main{font-size:clamp(27px,7vw,34px)}.change{font-size:10.5px;padding:7px 7px;letter-spacing:-.01em}.period{padding:8px 10px}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
 </style>
 </head>
 <body>
@@ -86,6 +86,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
     <button class="period" data-period="3months">3M</button>
     <button class="period" data-period="6months">6M</button>
     <button class="period" data-period="1year">1J</button>
+    <button class="period" data-period="max">MAX</button>
   </div>
 </div>
 
@@ -136,6 +137,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 
 <script>
 const UNITS=390.2153;
+const PERIOD_LABELS={day:"1T",week:"1W",month:"1M","3months":"3M","6months":"6M","1year":"1J",max:"MAX"};
 let allData=[];
 let period="day";
 const $=s=>document.querySelector(s);
@@ -146,7 +148,8 @@ const fmtPct=v=>(v>0?"+":"")+v.toLocaleString("de-DE",{minimumFractionDigits:2,m
 
 function selected(){
  const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
- if(period==="day") return d.slice(-2);
+ if(period==="day")return d.slice(-2);
+ if(period==="max")return d;
 
  const end=new Date(d.at(-1).date+"T12:00:00");
  const start=new Date(end);
@@ -154,16 +157,22 @@ function selected(){
  start.setDate(start.getDate()-(daysMap[period]||31));
 
  const result=d.filter(x=>new Date(x.date+"T12:00:00")>=start);
-
  if(["month","3months","6months","1year"].includes(period)){
    const prior=d.filter(x=>new Date(x.date+"T12:00:00")<start).at(-1);
-   if(prior && !result.some(x=>x.date===prior.date)) result.unshift(prior);
+   if(prior&&!result.some(x=>x.date===prior.date))result.unshift(prior);
  }
  return result;
 }
+
 function showMessage(text="",error=false){
- const el=$("#message"); el.textContent=text; el.className="message"+(text?" show":"")+(error?" error":"");
+ const el=$("#message");el.textContent=text;el.className="message"+(text?" show":"")+(error?" error":"");
 }
+
+function changeMarkup(amount,pct){
+ const p=PERIOD_LABELS[period]||"";
+ return `${amount>=0?"+":""}${fmtEUR(amount)} · ${fmtPct(pct)} <span class="change-period">· ${p}</span>`;
+}
+
 function render(){
  if($("#chart")._hideHover)$("#chart")._hideHover();
  if($("#nominalChart")._hideHover)$("#nominalChart")._hideHover();
@@ -173,202 +182,155 @@ function render(){
  $("#price").textContent=fmtNum(last.close);
  $("#priceDate").textContent=fmtDate(last.date);
  $("#nominal").textContent=fmtNum(last.close*UNITS);
+
  const s=selected();
  if(s.length>1){
    const periodFirst=s[0].close,periodLast=s.at(-1).close;
    const diff=periodLast-periodFirst,pct=diff/periodFirst*100;
-   const e=$("#change"); e.textContent=`${diff>=0?"+":""}${fmtEUR(diff)} · ${fmtPct(pct)}`;
+   const e=$("#change");e.innerHTML=changeMarkup(diff,pct);
    e.className="change "+(diff>0?"up":diff<0?"down":"");
 
    const nominalDiff=diff*UNITS;
-   const n=$("#nominalChange"); n.textContent=`${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)} · ${fmtPct(pct)}`;
+   const n=$("#nominalChange");n.innerHTML=changeMarkup(nominalDiff,pct);
    n.className="change "+(nominalDiff>0?"up":nominalDiff<0?"down":"");
- } else {
-   $("#change").textContent="–"; $("#change").className="change";
-   $("#nominalChange").textContent="–"; $("#nominalChange").className="change";
+ }else{
+   $("#change").textContent="–";$("#change").className="change";
+   $("#nominalChange").textContent="–";$("#nominalChange").className="change";
  }
- const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330};
+
+ const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330,max:0};
  let coverageDays=0;
- if(s.length>1){
-   coverageDays=(new Date(s.at(-1).date+"T12:00:00")-new Date(s[0].date+"T12:00:00"))/86400000;
- }
- if(s.length<2 || coverageDays < (minCoverageDays[period]||25)){
-   showMessage("Für diesen Zeitraum ist die historische Abdeckung noch nicht ausreichend.",false);
- } else showMessage();
+ if(s.length>1)coverageDays=(new Date(s.at(-1).date+"T12:00:00")-new Date(s[0].date+"T12:00:00"))/86400000;
+ if(s.length<2||coverageDays<(minCoverageDays[period]??25))showMessage("Für diesen Zeitraum ist die historische Abdeckung noch nicht ausreichend.",false);
+ else showMessage();
+
  const vals=s.map(x=>x.close),first=s[0]?.close,end=s.at(-1)?.close;
  $("#rangeChange").textContent=s.length>1?fmtPct((end-first)/first*100):"–";
  $("#rangeLow").textContent=vals.length?fmtEUR(Math.min(...vals)):"–";
  $("#rangeHigh").textContent=vals.length?fmtEUR(Math.max(...vals)):"–";
 
  const nominalVals=s.map(x=>x.close*UNITS);
- const nominalFirst=nominalVals[0], nominalEnd=nominalVals.at(-1);
+ const nominalFirst=nominalVals[0],nominalEnd=nominalVals.at(-1);
  if(s.length>1){
    const nominalDiff=nominalEnd-nominalFirst;
    $("#nominalRangeChange").textContent=`${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)}`;
- } else {
-   $("#nominalRangeChange").textContent="–";
- }
+ }else $("#nominalRangeChange").textContent="–";
  $("#nominalRangeLow").textContent=nominalVals.length?fmtEUR(Math.min(...nominalVals)):"–";
  $("#nominalRangeHigh").textContent=nominalVals.length?fmtEUR(Math.max(...nominalVals)):"–";
 
  draw(s);
  drawNominal(s);
 }
+
+function chartDateLabel(iso){
+ const dt=new Date(iso+"T12:00:00");
+ if(period==="max")return new Intl.DateTimeFormat("de-DE",{month:"short",year:"2-digit"}).format(dt);
+ return new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(dt);
+}
+
+function drawArea(x,data,X,Y,valueFn,baseline,color){
+ x.save();
+ x.beginPath();
+ data.forEach((p,i)=>i?x.lineTo(X(i),Y(valueFn(p))):x.moveTo(X(i),Y(valueFn(p))));
+ x.lineTo(X(data.length-1),baseline);
+ x.lineTo(X(0),baseline);
+ x.closePath();
+ const g=x.createLinearGradient(0,0,0,baseline);
+ g.addColorStop(0,color);
+ g.addColorStop(1,"rgba(101,212,154,0)");
+ x.fillStyle=g;
+ x.fill();
+ x.restore();
+}
+
 function draw(data){
  const c=$("#chart"),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);
  c.width=Math.floor(r.width*dpr);c.height=Math.floor(r.height*dpr);
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
-
- if(data.length<2){
-   c._chartMeta=null;
-   x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";
-   x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return
- }
+ if(data.length<2){c._chartMeta=null;x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
 
  const pad={l:66,r:28,t:16,b:62};
  const vals=data.map(a=>a.close);
  let lo=Math.min(...vals),hi=Math.max(...vals);
  if(hi-lo<.03){lo-=.02;hi+=.02}
- const ex=(hi-lo)*.20; lo-=ex; hi+=ex;
-
+ const ex=(hi-lo)*.20;lo-=ex;hi+=ex;
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
  c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close,label:"Kurswert"};
 
- x.strokeStyle="rgba(255,255,255,.10)";
- x.setLineDash([4,4]);
- x.lineWidth=1;
- x.fillStyle="#93a1b5";
- x.font="12px -apple-system,system-ui";
- x.textAlign="right";
+ x.strokeStyle="rgba(255,255,255,.10)";x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="right";
  for(let i=0;i<4;i++){
-   const gy=pad.t+i*(h-pad.t-pad.b)/3;
-   const value=hi-i*(hi-lo)/3;
-   x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();
-   x.fillText(fmtNum(value)+" €", pad.l-8, gy+4);
+   const gy=pad.t+i*(h-pad.t-pad.b)/3,value=hi-i*(hi-lo)/3;
+   x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();x.fillText(fmtNum(value)+" €",pad.l-8,gy+4);
  }
  x.setLineDash([]);
 
  const tickCount=Math.min(7,data.length);
  for(let t=0;t<tickCount;t++){
-   const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const gx=X(idx);
-   x.strokeStyle="rgba(255,255,255,.06)";
-   x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
+   const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1)),gx=X(idx);
+   x.strokeStyle="rgba(255,255,255,.06)";x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
 
- x.beginPath();
- data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));
- x.strokeStyle="#9db9d1";
- x.lineWidth=2.3;
- x.lineJoin="round";
- x.lineCap="round";
- x.stroke();
+ const isUp=data.at(-1).close>=data[0].close;
+ drawArea(x,data,X,Y,p=>p.close,h-pad.b,isUp?"rgba(101,212,154,.10)":"rgba(255,125,136,.10)");
 
- x.beginPath();
- x.arc(X(data.length-1),Y(data.at(-1).close),3.5,0,Math.PI*2);
- x.fillStyle="#9db9d1";
- x.fill();
+ x.beginPath();data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));
+ x.strokeStyle="#9db9d1";x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
+ x.beginPath();x.arc(X(data.length-1),Y(data.at(-1).close),3.5,0,Math.PI*2);x.fillStyle="#9db9d1";x.fill();
 
- x.fillStyle="#93a1b5";
- x.font="12px -apple-system,system-ui";
- x.textAlign="center";
+ x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
-   let gx=X(idx);
-   if(t===0)gx+=6;
-   if(t===tickCount-1)gx-=6;
-   const gy=h-28;
-   x.save();
-   x.translate(gx,gy);
-   x.rotate(-Math.PI/3.2);
-   x.fillText(label,0,0);
-   x.restore();
+   const label=chartDateLabel(data[idx].date);
+   let gx=X(idx);if(t===0)gx+=6;if(t===tickCount-1)gx-=6;
+   const gy=h-28;x.save();x.translate(gx,gy);x.rotate(-Math.PI/3.2);x.fillText(label,0,0);x.restore();
  }
-
- x.strokeStyle="rgba(255,255,255,.14)";
- x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
+ x.strokeStyle="rgba(255,255,255,.14)";x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
 
 function drawNominal(data){
  const c=$("#nominalChart"),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);
  c.width=Math.floor(r.width*dpr);c.height=Math.floor(r.height*dpr);
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
-
- if(data.length<2){
-   c._chartMeta=null;
-   x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";
-   x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return
- }
+ if(data.length<2){c._chartMeta=null;x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
 
  const values=data.map(a=>a.close*UNITS);
  const pad={l:74,r:28,t:16,b:62};
  let lo=Math.min(...values),hi=Math.max(...values);
  if(hi-lo<10){lo-=5;hi+=5}
- const ex=(hi-lo)*.20; lo-=ex; hi+=ex;
-
+ const ex=(hi-lo)*.20;lo-=ex;hi+=ex;
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
  c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close*UNITS,label:"Gesamtbestand"};
 
- x.strokeStyle="rgba(255,255,255,.10)";
- x.setLineDash([4,4]);
- x.lineWidth=1;
- x.fillStyle="#93a1b5";
- x.font="12px -apple-system,system-ui";
- x.textAlign="right";
+ x.strokeStyle="rgba(255,255,255,.10)";x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="right";
  for(let i=0;i<4;i++){
-   const gy=pad.t+i*(h-pad.t-pad.b)/3;
-   const value=hi-i*(hi-lo)/3;
-   x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();
-   x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €", pad.l-8,gy+4);
+   const gy=pad.t+i*(h-pad.t-pad.b)/3,value=hi-i*(hi-lo)/3;
+   x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €",pad.l-8,gy+4);
  }
  x.setLineDash([]);
 
  const tickCount=Math.min(7,data.length);
  for(let t=0;t<tickCount;t++){
-   const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const gx=X(idx);
-   x.strokeStyle="rgba(255,255,255,.06)";
-   x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
+   const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1)),gx=X(idx);
+   x.strokeStyle="rgba(255,255,255,.06)";x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
 
- x.beginPath();
- data.forEach((p,i)=>{
-   const value=p.close*UNITS;
-   i?x.lineTo(X(i),Y(value)):x.moveTo(X(i),Y(value));
- });
- x.strokeStyle="#9db9d1";
- x.lineWidth=2.3;
- x.lineJoin="round";
- x.lineCap="round";
- x.stroke();
+ const isUp=values.at(-1)>=values[0];
+ drawArea(x,data,X,Y,p=>p.close*UNITS,h-pad.b,isUp?"rgba(101,212,154,.10)":"rgba(255,125,136,.10)");
 
- x.beginPath();
- x.arc(X(data.length-1),Y(values.at(-1)),3.5,0,Math.PI*2);
- x.fillStyle="#9db9d1";
- x.fill();
+ x.beginPath();data.forEach((p,i)=>{const value=p.close*UNITS;i?x.lineTo(X(i),Y(value)):x.moveTo(X(i),Y(value));});
+ x.strokeStyle="#9db9d1";x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
+ x.beginPath();x.arc(X(data.length-1),Y(values.at(-1)),3.5,0,Math.PI*2);x.fillStyle="#9db9d1";x.fill();
 
- x.fillStyle="#93a1b5";
- x.font="12px -apple-system,system-ui";
- x.textAlign="center";
+ x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
-   let gx=X(idx);
-   if(t===0)gx+=6;
-   if(t===tickCount-1)gx-=6;
-   const gy=h-28;
-   x.save();
-   x.translate(gx,gy);
-   x.rotate(-Math.PI/3.2);
-   x.fillText(label,0,0);
-   x.restore();
+   const label=chartDateLabel(data[idx].date);
+   let gx=X(idx);if(t===0)gx+=6;if(t===tickCount-1)gx-=6;
+   const gy=h-28;x.save();x.translate(gx,gy);x.rotate(-Math.PI/3.2);x.fillText(label,0,0);x.restore();
  }
-
- x.strokeStyle="rgba(255,255,255,.14)";
- x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
+ x.strokeStyle="rgba(255,255,255,.14)";x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
 
 function setupChartHover(canvasId,tooltipId,lineId,dotId){
@@ -376,32 +338,48 @@ function setupChartHover(canvasId,tooltipId,lineId,dotId){
  const hide=()=>{tooltip.style.display="none";line.style.display="none";dot.style.display="none"};
  c._hideHover=hide;
  const showAt=clientX=>{
-   const m=c._chartMeta;
-   if(!m||m.data.length<2)return hide();
+   const m=c._chartMeta;if(!m||m.data.length<2)return hide();
    const rect=c.getBoundingClientRect();
    const localX=Math.max(m.pad.l,Math.min(m.w-m.pad.r,clientX-rect.left));
    const usable=m.w-m.pad.l-m.pad.r;
    const idx=Math.max(0,Math.min(m.data.length-1,Math.round((localX-m.pad.l)/usable*(m.data.length-1))));
-   const p=m.data[idx],value=m.value(p),gx=m.X(idx),gy=m.Y(value);
-   const wrap=c.parentElement;
+   const p=m.data[idx],value=m.value(p),gx=m.X(idx),gy=m.Y(value),wrap=c.parentElement;
    const px=c.offsetLeft+gx,py=c.offsetTop+gy;
-   line.style.display="block";
-   line.style.left=px+"px";
-   line.style.top=(c.offsetTop+m.pad.t)+"px";
-   line.style.height=(m.h-m.pad.t-m.pad.b)+"px";
-   dot.style.display="block";
-   dot.style.left=px+"px";
-   dot.style.top=py+"px";
-   tooltip.innerHTML=`${fmtDate(p.date)}<b>${m.label}: ${fmtEUR(value)}</b>`;
-   tooltip.style.display="block";
-   const tw=tooltip.offsetWidth;
-   const center=Math.max(tw/2+6,Math.min(wrap.clientWidth-tw/2-6,px));
-   tooltip.style.left=center+"px";
-   tooltip.style.transform="translateX(-50%)";
+   line.style.display="block";line.style.left=px+"px";line.style.top=(c.offsetTop+m.pad.t)+"px";line.style.height=(m.h-m.pad.t-m.pad.b)+"px";
+   dot.style.display="block";dot.style.left=px+"px";dot.style.top=py+"px";
+   tooltip.innerHTML=`${fmtDate(p.date)}<b>${m.label}: ${fmtEUR(value)}</b>`;tooltip.style.display="block";
+   const tw=tooltip.offsetWidth;const center=Math.max(tw/2+6,Math.min(wrap.clientWidth-tw/2-6,px));
+   tooltip.style.left=center+"px";tooltip.style.transform="translateX(-50%)";
  };
  c.addEventListener("pointermove",e=>{if(e.pointerType==="mouse")showAt(e.clientX)});
  c.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")hide()});
  c.addEventListener("pointerdown",e=>{showAt(e.clientX)});
+}
+
+function businessDaysAfter(iso){
+ const start=new Date(iso+"T12:00:00");
+ const today=new Date();today.setHours(12,0,0,0);
+ let count=0;
+ for(let d=new Date(start);;){
+   d.setDate(d.getDate()+1);
+   if(d>today)break;
+   const wd=d.getDay();if(wd!==0&&wd!==6)count++;
+ }
+ return count;
+}
+
+function updateFreshness(updatedAt){
+ const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
+ const last=d.at(-1);
+ const stamp=updatedAt?new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(updatedAt)):"";
+ const lag=last?businessDaysAfter(last.date):0;
+ if(lag>=3){
+   $("#dot").className="dot warn";
+   $("#status").textContent=`NAV verzögert${stamp?" · "+stamp:""}`;
+ }else{
+   $("#dot").className="dot ok";
+   $("#status").textContent="Aktualisiert "+stamp;
+ }
 }
 
 setupChartHover("chart","chartTooltip","chartHoverLine","chartHoverDot");
@@ -415,13 +393,18 @@ async function load(){
    const j=await r.json();
    allData=(j.values||[]).filter(v=>v.date&&Number.isFinite(Number(v.close))).map(v=>({date:v.date,close:Number(v.close)}));
    if(!allData.length)throw new Error("Keine NAV-Werte vorhanden");
-   $("#status").textContent="Aktualisiert "+(j.updated_at?new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(j.updated_at)):"");
-   $("#dot").className="dot ok";$("#source").textContent=j.source||"öffentliche NAV-Daten";render();
+   $("#source").textContent=j.source||"öffentliche NAV-Daten";
+   updateFreshness(j.updated_at);
+   render();
  }catch(e){
-   $("#status").textContent="Datenfehler";showMessage("Daten konnten nicht geladen werden: "+e.message,true);
+   $("#status").textContent="Datenfehler";$("#dot").className="dot";showMessage("Daten konnten nicht geladen werden: "+e.message,true);
  }
 }
-document.querySelectorAll(".period").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".period").forEach(x=>x.classList.remove("active"));b.classList.add("active");period=b.dataset.period;render()}));
+
+document.querySelectorAll(".period").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll(".period").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");period=b.dataset.period;render();
+}));
 $("#refreshBtn").addEventListener("click",()=>load());
 window.addEventListener("resize",()=>allData.length&&render());
 load();
