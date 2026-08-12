@@ -254,13 +254,14 @@ function draw(data){
  x.fillStyle="#93a1b5";
  x.font="12px -apple-system,system-ui";
  x.textAlign="center";
+ x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
    const label = new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
    let gx=X(idx);
    if(t===0)gx+=6;
    if(t===tickCount-1)gx-=6;
-   const gy=h-12;
+   const gy=h-28;
    x.save();
    x.translate(gx,gy);
    x.rotate(-Math.PI/3.2);
@@ -336,6 +337,7 @@ function drawNominal(data){
  x.fillStyle="#93a1b5";
  x.font="12px -apple-system,system-ui";
  x.textAlign="center";
+ x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
    const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(
@@ -344,7 +346,7 @@ function drawNominal(data){
    let gx=X(idx);
    if(t===0)gx+=6;
    if(t===tickCount-1)gx-=6;
-   const gy=h-12;
+   const gy=h-28;
    x.save();
    x.translate(gx,gy);
    x.rotate(-Math.PI/3.2);
