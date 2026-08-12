@@ -14,9 +14,13 @@
 :root{color-scheme:dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--accent:#77a7ff}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 70% -10%,rgba(77,124,255,.22),transparent 40%),linear-gradient(180deg,#091426 0%,#07101d 55%,#050b14 100%);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;color:var(--text)}
 body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
-.app{max-width:720px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 2px 18px}
-.eyebrow{font-size:12px;color:#9fc4ff;font-weight:700;letter-spacing:.02em}h1{font-size:clamp(21px,5vw,29px);margin:5px 0 0;line-height:1.05;letter-spacing:-.03em}
-.icon-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055);color:white;font-size:21px;cursor:pointer}
+.app{max-width:720px;margin:auto}header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:4px 2px 18px}
+.brand-block{min-width:0;flex:1}
+.title-row{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{width:28px;height:25px;object-fit:contain;flex:0 0 28px}
+.eyebrow{font-size:12px;color:#9fc4ff;font-weight:700;letter-spacing:.02em;margin-top:7px;margin-left:38px}
+h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03em}
+.icon-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055);color:white;font-size:21px;cursor:pointer;flex:0 0 46px}
 .card{border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(25,42,68,.90),rgba(11,20,34,.89));box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden}
 .hero{padding:24px 22px 20px}.label{color:var(--muted);font-size:14px;font-weight:600}.price-row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:8px}
 .price{font-size:clamp(48px,13vw,72px);line-height:.95;font-weight:750;letter-spacing:-.055em}.currency{font-size:.42em;color:#d7dce5;margin-left:4px;letter-spacing:-.02em}
@@ -33,7 +37,13 @@ body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inse
 <body>
 <div class="app">
 <header>
-<div><div class="eyebrow">WKN A40US6 · ISIN LU2936783674</div><h1>Santander Target Maturity Euro IV AD</h1></div>
+<div class="brand-block">
+  <div class="title-row">
+    <img class="brand-mark" src="santander-mark.png" alt="Santander">
+    <h1>Santander Target Maturity Euro IV AD</h1>
+  </div>
+  <div class="eyebrow">WKN A40US6 · ISIN LU2936783674</div>
+</div>
 <button class="icon-btn" id="refreshBtn" aria-label="Daten aktualisieren" title="Daten aktualisieren">↻</button>
 </header>
 
