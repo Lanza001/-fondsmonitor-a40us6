@@ -199,7 +199,7 @@ function draw(data){
    x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return
  }
 
- const pad={l:46,r:12,t:16,b:54};
+ const pad={l:66,r:28,t:16,b:62};
  const vals=data.map(a=>a.close);
  let lo=Math.min(...vals),hi=Math.max(...vals);
  if(hi-lo<.03){lo-=.02;hi+=.02}
@@ -254,7 +254,10 @@ function draw(data){
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
    const label = new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
-   const gx=X(idx), gy=h-12;
+   let gx=X(idx);
+   if(t===0)gx+=6;
+   if(t===tickCount-1)gx-=6;
+   const gy=h-12;
    x.save();
    x.translate(gx,gy);
    x.rotate(-Math.PI/3.2);
@@ -278,7 +281,7 @@ function drawNominal(data){
  }
 
  const values=data.map(a=>a.close*UNITS);
- const pad={l:72,r:12,t:16,b:54};
+ const pad={l:74,r:28,t:16,b:62};
  let lo=Math.min(...values),hi=Math.max(...values);
  if(hi-lo<10){lo-=5;hi+=5}
  const ex=(hi-lo)*.20; lo-=ex; hi+=ex;
@@ -335,7 +338,10 @@ function drawNominal(data){
    const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(
      new Date(data[idx].date+"T12:00:00")
    );
-   const gx=X(idx),gy=h-12;
+   let gx=X(idx);
+   if(t===0)gx+=6;
+   if(t===tickCount-1)gx-=6;
+   const gy=h-12;
    x.save();
    x.translate(gx,gy);
    x.rotate(-Math.PI/3.2);
