@@ -22,11 +22,14 @@ body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inse
 h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03em}
 .icon-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055);color:white;font-size:21px;cursor:pointer;flex:0 0 46px}
 .card{border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(25,42,68,.90),rgba(11,20,34,.89));box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden}
-.hero{padding:24px 22px 20px}.label{color:var(--muted);font-size:14px;font-weight:600}.price-row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:8px}
-.price{font-size:clamp(48px,13vw,72px);line-height:.95;font-weight:750;letter-spacing:-.055em}.currency{font-size:.42em;color:#d7dce5;margin-left:4px;letter-spacing:-.02em}
-.change{padding:8px 10px;border-radius:12px;font-size:14px;font-weight:750;background:rgba(255,255,255,.06);margin-bottom:5px}.change.up{color:var(--up);background:rgba(101,212,154,.11)}.change.down{color:var(--down);background:rgba(255,125,136,.11)}
-.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#8b96a6;box-shadow:0 0 0 5px rgba(139,150,166,.08)}.dot.ok{background:var(--up);box-shadow:0 0 0 5px rgba(101,212,154,.08)}
-.position{margin-top:18px;padding:16px 17px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.045);display:flex;justify-content:space-between;align-items:flex-end;gap:14px}.position span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}.position strong{font-size:24px;letter-spacing:-.025em}.position small{color:var(--muted);font-size:12px;padding-bottom:3px}
+.hero{padding:24px 22px 20px}.label{color:var(--muted);font-size:14px;font-weight:600}
+.hero-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:end;margin-top:14px}
+.metric-block{min-width:0;display:flex;flex-direction:column;gap:10px}
+.metric-kicker{font-size:13px;color:var(--muted);font-weight:600}
+.metric-main{font-size:clamp(27px,7vw,52px);line-height:.95;font-weight:750;letter-spacing:-.045em;white-space:nowrap}
+.currency{font-size:.42em;color:#d7dce5;margin-left:4px;letter-spacing:-.02em}
+.change{align-self:flex-start;display:inline-flex;align-items:center;white-space:nowrap;padding:8px 10px;border-radius:12px;font-size:13px;font-weight:750;background:rgba(255,255,255,.06)}.change.up{color:var(--up);background:rgba(101,212,154,.11)}.change.down{color:var(--down);background:rgba(255,125,136,.11)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:13px}.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#8b96a6;box-shadow:0 0 0 5px rgba(139,150,166,.08)}.dot.ok{background:var(--up);box-shadow:0 0 0 5px rgba(101,212,154,.08)}
 .chart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 10px}
 .chart-title{font-size:14px;font-weight:700;color:#dbe6f7;letter-spacing:.01em}
 .periods{display:flex;flex-wrap:wrap;gap:8px;margin:0}
@@ -40,7 +43,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 .chart-subvalue{font-size:12px;color:var(--muted);text-align:right}
 .chart-wrap{height:300px;position:relative;margin:2px 0 0;padding:8px 4px 0}canvas{display:block;width:100%;height:100%}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px;line-height:1.35}.stat-line{display:inline-block;white-space:nowrap}
 .details{margin-top:14px;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.d span{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.d b{font-size:14px}.note{margin-top:14px;padding:14px 16px;border-radius:18px;background:rgba(119,167,255,.08);border:1px solid rgba(119,167,255,.15);color:#cbd8f4;font-size:12px;line-height:1.45}.footer{text-align:center;color:#778397;font-size:11px;line-height:1.45;margin:18px 12px}
-@media(max-width:430px){.hero{padding:22px 18px 18px}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.position strong{font-size:22px}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
+@media(max-width:430px){.hero{padding:22px 18px 18px}.hero-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric-main{font-size:clamp(27px,7vw,34px)}.change{font-size:11px;padding:7px 7px}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
 </style>
 </head>
 <body>
@@ -57,11 +60,22 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 </header>
 
 <section class="card hero">
-<div class="label">Letzter Nettoinventarwert (NAV)</div>
-<div class="price-row"><div class="price"><span id="price">–</span><span class="currency">€</span></div><div class="change" id="change">–</div></div>
-<div class="meta"><span id="priceDate">–</span><span class="status"><i class="dot" id="dot"></i><span id="status">Lade Daten …</span></span></div>
+<div class="label">Aktuelle Werte</div>
 
-<div class="position"><div><span>Nennwert</span><strong id="nominal">–</strong></div><small>390,2153 Stück</small></div>
+<div class="hero-metrics">
+  <div class="metric-block">
+    <div class="metric-kicker">Kurswert</div>
+    <div class="metric-main"><span id="price">–</span><span class="currency">€</span></div>
+    <div class="change" id="change">–</div>
+  </div>
+  <div class="metric-block secondary">
+    <div class="metric-kicker">Gesamtbestand</div>
+    <div class="metric-main"><span id="nominal">–</span><span class="currency">€</span></div>
+    <div class="change" id="nominalChange">–</div>
+  </div>
+</div>
+
+<div class="meta"><span id="priceDate">–</span><span class="status"><i class="dot" id="dot"></i><span id="status">Lade Daten …</span></span></div>
 
 <div class="chart-head">
   <div class="chart-title">Wertentwicklung</div>
@@ -93,7 +107,7 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 
 <div class="chart-section">
   <div class="chart-subhead">
-    <div class="chart-subtitle">Nennwertentwicklung</div>
+    <div class="chart-subtitle">Bestandsentwicklung</div>
     <div class="chart-subvalue">390,2153 Stück × NAV</div>
   </div>
   <div class="chart-wrap"><canvas id="nominalChart"></canvas></div>
@@ -141,8 +155,6 @@ function selected(){
 
  const result=d.filter(x=>new Date(x.date+"T12:00:00")>=start);
 
- // Für längere Zeiträume zusätzlich den letzten Wert unmittelbar vor
- // dem Zeitraumstart aufnehmen. Dadurch beginnt die Linie sauber am Rand.
  if(["month","3months","6months","1year"].includes(period)){
    const prior=d.filter(x=>new Date(x.date+"T12:00:00")<start).at(-1);
    if(prior && !result.some(x=>x.date===prior.date)) result.unshift(prior);
@@ -158,11 +170,18 @@ function render(){
  const last=d.at(-1),prev=d.at(-2);
  $("#price").textContent=fmtNum(last.close);
  $("#priceDate").textContent=fmtDate(last.date);
- $("#nominal").textContent=fmtEUR(last.close*UNITS);
+ $("#nominal").textContent=fmtNum(last.close*UNITS);
  if(prev){
    const diff=last.close-prev.close,pct=diff/prev.close*100;
    const e=$("#change"); e.textContent=`${diff>=0?"+":""}${fmtEUR(diff)} · ${fmtPct(pct)}`;
    e.className="change "+(diff>0?"up":diff<0?"down":"");
+
+   const nominalDiff=(last.close-prev.close)*UNITS;
+   const n=$("#nominalChange"); n.textContent=`${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)} · ${fmtPct(pct)}`;
+   n.className="change "+(nominalDiff>0?"up":nominalDiff<0?"down":"");
+ } else {
+   $("#change").textContent="–"; $("#change").className="change";
+   $("#nominalChange").textContent="–"; $("#nominalChange").className="change";
  }
  const s=selected();
  const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330};
@@ -211,7 +230,6 @@ function draw(data){
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
 
- // Horizontal grid + y labels
  x.strokeStyle="rgba(255,255,255,.10)";
  x.setLineDash([4,4]);
  x.lineWidth=1;
@@ -226,7 +244,6 @@ function draw(data){
  }
  x.setLineDash([]);
 
- // vertical guide lines
  const tickCount=Math.min(7,data.length);
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
@@ -235,7 +252,6 @@ function draw(data){
    x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
 
- // line
  x.beginPath();
  data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));
  x.strokeStyle="#9db9d1";
@@ -244,20 +260,17 @@ function draw(data){
  x.lineCap="round";
  x.stroke();
 
- // last point
  x.beginPath();
  x.arc(X(data.length-1),Y(data.at(-1).close),3.5,0,Math.PI*2);
  x.fillStyle="#9db9d1";
  x.fill();
 
- // x labels, slightly rotated like the sample
  x.fillStyle="#93a1b5";
  x.font="12px -apple-system,system-ui";
  x.textAlign="center";
- x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const label = new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
+   const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
    let gx=X(idx);
    if(t===0)gx+=6;
    if(t===tickCount-1)gx-=6;
@@ -269,7 +282,6 @@ function draw(data){
    x.restore();
  }
 
- // baseline
  x.strokeStyle="rgba(255,255,255,.14)";
  x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
@@ -303,10 +315,7 @@ function drawNominal(data){
    const gy=pad.t+i*(h-pad.t-pad.b)/3;
    const value=hi-i*(hi-lo)/3;
    x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();
-   x.fillText(
-     new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €",
-     pad.l-8,gy+4
-   );
+   x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €", pad.l-8, gy+4);
  }
  x.setLineDash([]);
 
@@ -337,12 +346,9 @@ function drawNominal(data){
  x.fillStyle="#93a1b5";
  x.font="12px -apple-system,system-ui";
  x.textAlign="center";
- x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
-   const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(
-     new Date(data[idx].date+"T12:00:00")
-   );
+   const label=new Intl.DateTimeFormat("de-DE",{day:"numeric",month:"short"}).format(new Date(data[idx].date+"T12:00:00"));
    let gx=X(idx);
    if(t===0)gx+=6;
    if(t===tickCount-1)gx-=6;
