@@ -204,7 +204,7 @@ function render(){
  const nominalFirst=nominalVals[0], nominalEnd=nominalVals.at(-1);
  if(s.length>1){
    const nominalDiff=nominalEnd-nominalFirst;
-   $("#nominalRangeChange").innerHTML=`<span class="stat-line">${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)}</span><br><span class="stat-line">${fmtPct(nominalDiff/nominalFirst*100)}</span>`;
+   $("#nominalRangeChange").textContent=`${nominalDiff>=0?"+":""}${fmtEUR(nominalDiff)}`;
  } else {
    $("#nominalRangeChange").textContent="–";
  }
@@ -322,7 +322,7 @@ function drawNominal(data){
    const gy=pad.t+i*(h-pad.t-pad.b)/3;
    const value=hi-i*(hi-lo)/3;
    x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();
-   x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €", pad.l-8, gy+4);
+   x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €", pad.l-8,gy+4);
  }
  x.setLineDash([]);
 
