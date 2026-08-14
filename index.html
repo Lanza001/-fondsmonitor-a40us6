@@ -3,22 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" id="iosStatusBarStyle" content="default">
+<script>document.getElementById("iosStatusBarStyle").content=matchMedia("(prefers-color-scheme: dark)").matches?"black-translucent":"default";</script>
 <meta name="apple-mobile-web-app-title" content="Fondsmonitor">
 <title>Fondsmonitor · A40US6</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-:root{color-scheme:dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--warn:#f2c66d;--accent:#77a7ff}
+:root{color-scheme:light dark;--bg:#07101d;--panel:#102037;--text:#f5f7fb;--muted:#99a7bc;--line:rgba(255,255,255,.10);--up:#65d49a;--down:#ff7d88;--warn:#f2c66d;--accent:#77a7ff;--brand:#EC0000;--chart-grid:rgba(255,255,255,.10);--chart-grid-soft:rgba(255,255,255,.06);--chart-axis:#93a1b5;--chart-line:#9db9d1;--chart-border:rgba(255,255,255,.14);--chart-empty:#8794a7;--chart-purchase:#f2c66d;--chart-purchase-line:rgba(242,198,109,.58);--area-up:rgba(101,212,154,.10);--area-down:rgba(255,125,136,.10)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 70% -10%,rgba(77,124,255,.22),transparent 40%),linear-gradient(180deg,#091426 0%,#07101d 55%,#050b14 100%);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;color:var(--text)}
 body{padding:max(12px,env(safe-area-inset-top)) 14px max(24px,env(safe-area-inset-bottom))}
 .app{max-width:720px;margin:auto}header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:4px 2px 18px}
 .brand-block{min-width:0;flex:1}
 .title-row{display:flex;align-items:center;gap:10px;min-width:0}
 .brand-mark{width:28px;height:25px;object-fit:contain;flex:0 0 28px}
-.eyebrow{font-size:12px;color:#9fc4ff;font-weight:700;letter-spacing:.02em;margin-top:7px;margin-left:38px}
+.eyebrow{font-size:12px;color:var(--brand);font-weight:700;letter-spacing:.02em;margin-top:7px;margin-left:38px}
 h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03em}
 .icon-btn{width:46px;height:46px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.055);color:white;font-size:21px;cursor:pointer;flex:0 0 46px}
 .card{border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,rgba(25,42,68,.90),rgba(11,20,34,.89));box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden}
@@ -43,6 +45,30 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 .chart-subvalue{font-size:12px;color:var(--muted);text-align:right}
 .chart-wrap{height:300px;position:relative;margin:2px 0 0;padding:8px 4px 0}canvas{display:block;width:100%;height:100%;cursor:crosshair}.chart-hover-line{display:none;position:absolute;width:1px;background:rgba(255,255,255,.24);pointer-events:none}.chart-hover-dot{display:none;position:absolute;width:9px;height:9px;border-radius:50%;background:#9db9d1;border:2px solid #102037;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(157,185,209,.20)}.chart-tooltip{display:none;position:absolute;z-index:3;top:8px;min-width:112px;padding:7px 9px;border-radius:10px;background:rgba(5,11,20,.94);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 24px rgba(0,0,0,.28);pointer-events:none;white-space:nowrap;font-size:11px;line-height:1.35;color:#dbe6f7}.chart-tooltip b{display:block;color:#fff;font-size:12px;margin-top:2px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stat strong{font-size:14px;line-height:1.35}.stat-line{display:inline-block;white-space:nowrap}
 .details{margin-top:14px;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.d span{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.d b{font-size:14px}.note{margin-top:14px;padding:14px 16px;border-radius:18px;background:rgba(119,167,255,.08);border:1px solid rgba(119,167,255,.15);color:#cbd8f4;font-size:12px;line-height:1.45}.footer{text-align:center;color:#778397;font-size:11px;line-height:1.45;margin:18px 12px}
+@media(prefers-color-scheme:light){
+:root{--bg:#f6f7f9;--panel:#ffffff;--text:#171a21;--muted:#667085;--line:rgba(17,24,39,.10);--up:#16855b;--down:#d92d20;--warn:#b54708;--accent:#EC0000;--chart-grid:rgba(17,24,39,.10);--chart-grid-soft:rgba(17,24,39,.055);--chart-axis:#667085;--chart-line:#EC0000;--chart-border:rgba(17,24,39,.14);--chart-empty:#98a2b3;--chart-purchase:#b54708;--chart-purchase-line:rgba(181,71,8,.55);--area-up:rgba(22,133,91,.10);--area-down:rgba(217,45,32,.09)}
+html,body{background:radial-gradient(circle at 70% -10%,rgba(236,0,0,.07),transparent 38%),linear-gradient(180deg,#fbfbfc 0%,#f4f5f7 55%,#eef0f3 100%)}
+.icon-btn{background:rgba(255,255,255,.86);color:#252b33;border-color:rgba(17,24,39,.10);box-shadow:0 6px 18px rgba(17,24,39,.06)}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(248,249,251,.98));border-color:rgba(17,24,39,.09);box-shadow:0 18px 50px rgba(17,24,39,.09)}
+.currency{color:#667085}
+.change{background:rgba(17,24,39,.045)}
+.change.up{color:var(--up);background:rgba(22,133,91,.09)}
+.change.down{color:var(--down);background:rgba(217,45,32,.08)}
+.meta{border-top-color:rgba(17,24,39,.08)}
+.chart-title,.chart-subtitle{color:#252b33}
+.period{border-color:rgba(17,24,39,.12);background:rgba(17,24,39,.025);color:#667085}
+.period.active{background:#EC0000;color:#fff;border-color:#EC0000;box-shadow:0 5px 14px rgba(236,0,0,.18)}
+.message{border-color:rgba(236,0,0,.14);background:rgba(236,0,0,.055);color:#7a1a1a}
+.message.error{border-color:rgba(217,45,32,.18);background:rgba(217,45,32,.08);color:#b42318}
+.chart-section+.chart-section{border-top-color:rgba(17,24,39,.08)}
+.chart-hover-line{background:rgba(17,24,39,.20)}
+.chart-hover-dot{background:#EC0000;border-color:#fff;box-shadow:0 0 0 2px rgba(236,0,0,.12)}
+.chart-tooltip{background:rgba(255,255,255,.97);border-color:rgba(17,24,39,.12);box-shadow:0 10px 30px rgba(17,24,39,.14);color:#475467}
+.chart-tooltip b{color:#171a21}
+.stat{background:rgba(17,24,39,.025);border-color:rgba(17,24,39,.07)}
+.note{background:rgba(236,0,0,.045);border-color:rgba(236,0,0,.11);color:#6f2930}
+.footer{color:#7a8492}
+}
 @media(max-width:430px){.hero{padding:22px 18px 18px}.hero-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.metric-main{font-size:clamp(27px,7vw,34px)}.change{font-size:9.8px;padding:7px 6px;letter-spacing:-.02em}.change-period{font-size:.78em;opacity:.62}.chart-wrap{height:250px}.grid{grid-template-columns:1fr 1fr}.chart-head{align-items:flex-start;flex-direction:column}.periods{width:100%;flex-wrap:nowrap;gap:5px}.period{flex:1 1 0;padding:8px 3px;font-size:11px;white-space:nowrap}.chart-subhead{align-items:flex-start;flex-direction:column;gap:3px}.chart-subvalue{text-align:left}}
 </style>
 </head>
@@ -149,6 +175,8 @@ const fmtNum=v=>new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFr
 const fmtEUR=v=>fmtNum(v)+"\u00a0€";
 const fmtDate=iso=>new Intl.DateTimeFormat("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(iso+"T12:00:00"));
 const fmtPct=v=>(v>0?"+":"")+v.toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})+"%";
+const cssVar=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const schemeQuery=window.matchMedia("(prefers-color-scheme: dark)");
 
 function selected(){
  const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
@@ -243,7 +271,7 @@ function drawArea(x,data,X,Y,valueFn,baseline,color){
  x.closePath();
  const g=x.createLinearGradient(0,0,0,baseline);
  g.addColorStop(0,color);
- g.addColorStop(1,"rgba(101,212,154,0)");
+ g.addColorStop(1,"rgba(0,0,0,0)");
  x.fillStyle=g;
  x.fill();
  x.restore();
@@ -253,7 +281,7 @@ function draw(data){
  const c=$("#chart"),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);
  c.width=Math.floor(r.width*dpr);c.height=Math.floor(r.height*dpr);
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
- if(data.length<2){c._chartMeta=null;x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
+ if(data.length<2){c._chartMeta=null;x.fillStyle=cssVar("--chart-empty");x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
 
  const pad={l:66,r:28,t:16,b:62};
  const vals=data.map(a=>a.close);
@@ -264,7 +292,7 @@ function draw(data){
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
  c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close,label:"Kurswert"};
 
- x.strokeStyle="rgba(255,255,255,.10)";x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="right";
+ x.strokeStyle=cssVar("--chart-grid");x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle=cssVar("--chart-axis");x.font="12px -apple-system,system-ui";x.textAlign="right";
  for(let i=0;i<4;i++){
    const gy=pad.t+i*(h-pad.t-pad.b)/3,value=hi-i*(hi-lo)/3;
    x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();x.fillText(fmtNum(value)+" €",pad.l-8,gy+4);
@@ -274,31 +302,31 @@ function draw(data){
  const tickCount=Math.min(7,data.length);
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1)),gx=X(idx);
-   x.strokeStyle="rgba(255,255,255,.06)";x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
+   x.strokeStyle=cssVar("--chart-grid-soft");x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
 
  const isUp=data.at(-1).close>=data[0].close;
- drawArea(x,data,X,Y,p=>p.close,h-pad.b,isUp?"rgba(101,212,154,.10)":"rgba(255,125,136,.10)");
+ drawArea(x,data,X,Y,p=>p.close,h-pad.b,cssVar(isUp?"--area-up":"--area-down"));
 
  x.beginPath();data.forEach((p,i)=>i?x.lineTo(X(i),Y(p.close)):x.moveTo(X(i),Y(p.close)));
- x.strokeStyle="#9db9d1";x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
- x.beginPath();x.arc(X(data.length-1),Y(data.at(-1).close),3.5,0,Math.PI*2);x.fillStyle="#9db9d1";x.fill();
+ x.strokeStyle=cssVar("--chart-line");x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
+ x.beginPath();x.arc(X(data.length-1),Y(data.at(-1).close),3.5,0,Math.PI*2);x.fillStyle=cssVar("--chart-line");x.fill();
 
- x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
+ x.fillStyle=cssVar("--chart-axis");x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
    const label=chartDateLabel(data[idx].date);
    let gx=X(idx);if(t===0)gx+=6;if(t===tickCount-1)gx-=6;
    const gy=h-28;x.save();x.translate(gx,gy);x.rotate(-Math.PI/3.2);x.fillText(label,0,0);x.restore();
  }
- x.strokeStyle="rgba(255,255,255,.14)";x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
+ x.strokeStyle=cssVar("--chart-border");x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
 
 function drawNominal(data){
  const c=$("#nominalChart"),r=c.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);
  c.width=Math.floor(r.width*dpr);c.height=Math.floor(r.height*dpr);
  const x=c.getContext("2d");x.scale(dpr,dpr);const w=r.width,h=r.height;x.clearRect(0,0,w,h);
- if(data.length<2){c._chartMeta=null;x.fillStyle="#8794a7";x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
+ if(data.length<2){c._chartMeta=null;x.fillStyle=cssVar("--chart-empty");x.font="13px -apple-system,system-ui";x.textAlign="center";x.fillText("Noch nicht genügend NAV-Daten.",w/2,h/2);return}
 
  const values=data.map(a=>a.close*UNITS);
  const pad={l:74,r:28,t:16,b:62};
@@ -309,7 +337,7 @@ function drawNominal(data){
  const Y=n=>pad.t+(hi-n)*(h-pad.t-pad.b)/(hi-lo);
  c._chartMeta={data:[...data],pad,w,h,X,Y,value:p=>p.close*UNITS,label:"Gesamtbestand"};
 
- x.strokeStyle="rgba(255,255,255,.10)";x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="right";
+ x.strokeStyle=cssVar("--chart-grid");x.setLineDash([4,4]);x.lineWidth=1;x.fillStyle=cssVar("--chart-axis");x.font="12px -apple-system,system-ui";x.textAlign="right";
  for(let i=0;i<4;i++){
    const gy=pad.t+i*(h-pad.t-pad.b)/3,value=hi-i*(hi-lo)/3;
    x.beginPath();x.moveTo(pad.l,gy);x.lineTo(w-pad.r,gy);x.stroke();x.fillText(new Intl.NumberFormat("de-DE",{maximumFractionDigits:0}).format(value)+" €",pad.l-8,gy+4);
@@ -319,32 +347,32 @@ function drawNominal(data){
  const tickCount=Math.min(7,data.length);
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1)),gx=X(idx);
-   x.strokeStyle="rgba(255,255,255,.06)";x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
+   x.strokeStyle=cssVar("--chart-grid-soft");x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
 
  const purchaseY=Y(PURCHASE_AMOUNT);
  x.save();
- x.strokeStyle="rgba(242,198,109,.58)";x.setLineDash([6,5]);x.lineWidth=1.2;
+ x.strokeStyle=cssVar("--chart-purchase-line");x.setLineDash([6,5]);x.lineWidth=1.2;
  x.beginPath();x.moveTo(pad.l,purchaseY);x.lineTo(w-pad.r,purchaseY);x.stroke();
- x.setLineDash([]);x.fillStyle="#f2c66d";x.font="11px -apple-system,system-ui";x.textAlign="left";x.textBaseline="bottom";
+ x.setLineDash([]);x.fillStyle=cssVar("--chart-purchase");x.font="11px -apple-system,system-ui";x.textAlign="left";x.textBaseline="bottom";
  x.fillText("Kaufwert 40.000 €",pad.l+6,purchaseY-4);
  x.restore();
 
  const isUp=values.at(-1)>=values[0];
- drawArea(x,data,X,Y,p=>p.close*UNITS,h-pad.b,isUp?"rgba(101,212,154,.10)":"rgba(255,125,136,.10)");
+ drawArea(x,data,X,Y,p=>p.close*UNITS,h-pad.b,cssVar(isUp?"--area-up":"--area-down"));
 
  x.beginPath();data.forEach((p,i)=>{const value=p.close*UNITS;i?x.lineTo(X(i),Y(value)):x.moveTo(X(i),Y(value));});
- x.strokeStyle="#9db9d1";x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
- x.beginPath();x.arc(X(data.length-1),Y(values.at(-1)),3.5,0,Math.PI*2);x.fillStyle="#9db9d1";x.fill();
+ x.strokeStyle=cssVar("--chart-line");x.lineWidth=2.3;x.lineJoin="round";x.lineCap="round";x.stroke();
+ x.beginPath();x.arc(X(data.length-1),Y(values.at(-1)),3.5,0,Math.PI*2);x.fillStyle=cssVar("--chart-line");x.fill();
 
- x.fillStyle="#93a1b5";x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
+ x.fillStyle=cssVar("--chart-axis");x.font="12px -apple-system,system-ui";x.textAlign="center";x.textBaseline="middle";
  for(let t=0;t<tickCount;t++){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1));
    const label=chartDateLabel(data[idx].date);
    let gx=X(idx);if(t===0)gx+=6;if(t===tickCount-1)gx-=6;
    const gy=h-28;x.save();x.translate(gx,gy);x.rotate(-Math.PI/3.2);x.fillText(label,0,0);x.restore();
  }
- x.strokeStyle="rgba(255,255,255,.14)";x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
+ x.strokeStyle=cssVar("--chart-border");x.beginPath();x.moveTo(pad.l,h-pad.b);x.lineTo(w-pad.r,h-pad.b);x.stroke();
 }
 
 function setupChartHover(canvasId,tooltipId,lineId,dotId){
@@ -421,6 +449,9 @@ document.querySelectorAll(".period").forEach(b=>b.addEventListener("click",()=>{
 }));
 $("#refreshBtn").addEventListener("click",()=>load());
 window.addEventListener("resize",()=>allData.length&&render());
+const onSchemeChange=()=>allData.length&&render();
+if(schemeQuery.addEventListener)schemeQuery.addEventListener("change",onSchemeChange);
+else if(schemeQuery.addListener)schemeQuery.addListener(onSchemeChange);
 load();
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
