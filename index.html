@@ -126,6 +126,8 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 <div class="d"><span>Fondstyp</span><b>Renten-/Laufzeitfonds</b></div>
 <div class="d"><span>Fondswährung</span><b>EUR</b></div>
 <div class="d"><span>Stückzahl</span><b>390,2153</b></div>
+<div class="d"><span>Kaufdatum</span><b>12.03.2025</b></div>
+<div class="d"><span>Kaufbetrag</span><b>40.000,00 €</b></div>
 <div class="d"><span>Aufgelegt</span><b>27.01.2025</b></div>
 <div class="d"><span>NAV-Berechnung</span><b>Täglich*</b></div>
 <div class="d"><span>Datenquelle</span><b id="source">–</b></div>
@@ -137,6 +139,8 @@ h1{font-size:clamp(21px,5vw,29px);margin:0;line-height:1.05;letter-spacing:-.03e
 
 <script>
 const UNITS=390.2153;
+const PURCHASE_DATE="2025-03-12";
+const PURCHASE_AMOUNT=40000;
 const PERIOD_LABELS={day:"1T",week:"1W",month:"1M","3months":"3M","6months":"6M","1year":"1J",max:"MAX"};
 let allData=[];
 let period="day";
@@ -149,7 +153,7 @@ const fmtPct=v=>(v>0?"+":"")+v.toLocaleString("de-DE",{minimumFractionDigits:2,m
 function selected(){
  const d=[...allData].sort((a,b)=>a.date.localeCompare(b.date));
  if(period==="day")return d.slice(-2);
- if(period==="max")return d;
+ if(period==="max")return d.filter(x=>x.date>=PURCHASE_DATE);
 
  const end=new Date(d.at(-1).date+"T12:00:00");
  const start=new Date(end);
@@ -181,7 +185,13 @@ function render(){
  const last=d.at(-1);
  $("#price").textContent=fmtNum(last.close);
  $("#priceDate").textContent=fmtDate(last.date);
- $("#nominal").textContent=fmtNum(last.close*UNITS);
+ const currentValue=last.close*UNITS;
+ $("#nominal").textContent=fmtNum(currentValue);
+ const purchaseDiff=currentValue-PURCHASE_AMOUNT;
+ const purchasePct=purchaseDiff/PURCHASE_AMOUNT*100;
+ const purchaseChange=$("#nominalChange");
+ purchaseChange.innerHTML=`${purchaseDiff>=0?"+":""}${fmtEUR(purchaseDiff)} · ${fmtPct(purchasePct)} <span class="change-period">· seit Kauf</span>`;
+ purchaseChange.className="change "+(purchaseDiff>0?"up":purchaseDiff<0?"down":"");
 
  const s=selected();
  if(s.length>1){
@@ -190,12 +200,8 @@ function render(){
    const e=$("#change");e.innerHTML=changeMarkup(diff,pct);
    e.className="change "+(diff>0?"up":diff<0?"down":"");
 
-   const nominalDiff=diff*UNITS;
-   const n=$("#nominalChange");n.innerHTML=changeMarkup(nominalDiff,pct);
-   n.className="change "+(nominalDiff>0?"up":nominalDiff<0?"down":"");
  }else{
    $("#change").textContent="–";$("#change").className="change";
-   $("#nominalChange").textContent="–";$("#nominalChange").className="change";
  }
 
  const minCoverageDays={day:1,week:4,month:25,"3months":75,"6months":150,"1year":330,max:0};
@@ -296,7 +302,7 @@ function drawNominal(data){
 
  const values=data.map(a=>a.close*UNITS);
  const pad={l:74,r:28,t:16,b:62};
- let lo=Math.min(...values),hi=Math.max(...values);
+ let lo=Math.min(...values,PURCHASE_AMOUNT),hi=Math.max(...values,PURCHASE_AMOUNT);
  if(hi-lo<10){lo-=5;hi+=5}
  const ex=(hi-lo)*.20;lo-=ex;hi+=ex;
  const X=i=>pad.l+i*(w-pad.l-pad.r)/(data.length-1);
@@ -315,6 +321,14 @@ function drawNominal(data){
    const idx=Math.round(t*(data.length-1)/Math.max(1,tickCount-1)),gx=X(idx);
    x.strokeStyle="rgba(255,255,255,.06)";x.beginPath();x.moveTo(gx,pad.t);x.lineTo(gx,h-pad.b);x.stroke();
  }
+
+ const purchaseY=Y(PURCHASE_AMOUNT);
+ x.save();
+ x.strokeStyle="rgba(242,198,109,.58)";x.setLineDash([6,5]);x.lineWidth=1.2;
+ x.beginPath();x.moveTo(pad.l,purchaseY);x.lineTo(w-pad.r,purchaseY);x.stroke();
+ x.setLineDash([]);x.fillStyle="#f2c66d";x.font="11px -apple-system,system-ui";x.textAlign="left";x.textBaseline="bottom";
+ x.fillText("Kaufwert 40.000 €",pad.l+6,purchaseY-4);
+ x.restore();
 
  const isUp=values.at(-1)>=values[0];
  drawArea(x,data,X,Y,p=>p.close*UNITS,h-pad.b,isUp?"rgba(101,212,154,.10)":"rgba(255,125,136,.10)");
