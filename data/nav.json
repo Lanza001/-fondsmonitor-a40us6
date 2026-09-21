@@ -2,7 +2,7 @@
   "isin": "LU2936783674",
   "wkn": "A40US6",
   "source": "Santander Factsheet (Monatswerte) + DAS INVESTMENT",
-  "updated_at": "2026-09-18T20:54:21Z",
+  "updated_at": "2026-09-21T15:05:30Z",
   "values": [
     {
       "date": "2025-01-31",
@@ -219,6 +219,10 @@
     {
       "date": "2026-09-16",
       "close": 100.86
+    },
+    {
+      "date": "2026-09-17",
+      "close": 100.9
     }
   ]
 }
